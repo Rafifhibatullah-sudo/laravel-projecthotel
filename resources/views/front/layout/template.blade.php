@@ -19,7 +19,7 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f8fafc;
       color: #334155;
-      overflow-x: hidden; /* Mencegah horizontal scrollbar saat animasi muncul dari samping */
+      overflow-x: hidden;
     }
     .navbar {
       backdrop-filter: blur(10px);
@@ -112,8 +112,37 @@
     @yield('content')
   </main>
 
+  <!-- Section Peta Lokasi (Sematkan Google Maps) -->
+  <section class="py-5 bg-white border-top">
+    <div class="container" data-aos="fade-up">
+      <div class="row align-items-center g-4">
+        
+        <!-- Kolom Informasi Singkat -->
+        <div class="col-lg-5">
+          <span class="text-primary fw-bold text-uppercase small tracking-wider">Lokasi Kami</span>
+          <h3 class="fw-bold text-dark mt-1 mb-3">Grand Horizon Hotel</h3>
+          <p class="text-muted lh-base mb-3">
+            Menyediakan pengalaman menginap berkelas bintang lima puluh dengan fasilitas mewah, kamar nyaman, dan pelayanan terbaik untuk liburan serta perjalanan bisnis Anda.
+          </p>
+          <div class="d-flex align-items-center text-muted small">
+            <i class="fas fa-map-marker-alt text-danger fs-5 me-2"></i>
+            <span>Jl. Horizon Grand No. 88, Sumatera Selatan, Indonesia</span>
+          </div>
+        </div>
+
+        <!-- Kolom Embedded Maps (Ukurannya pas & rapi) -->
+        <div class="col-lg-7">
+          <div class="rounded-4 overflow-hidden shadow-sm border border-2 border-light" style="height: 230px;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.514158659106!2d104.74457787383801!3d-2.9547284397235676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b742b746b209b%3A0x29e8c12afb478592!2sAston%20Palembang%20Hotel%20%26%20Conference%20Center!5e0!3m2!1sid!2sid!4v1787304084104!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- Footer Section -->
-  <footer class="footer pt-5 pb-4 mt-5">
+  <footer class="footer pt-5 pb-4">
     <div class="container" data-aos="fade-up">
       <div class="row g-4">
         <div class="col-md-5">
@@ -130,12 +159,11 @@
         </div>
         <div class="col-md-4">
           <h6 class="fw-bold text-white mb-3">Kontak & Lokasi</h6>
-          <p class="small mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Jl. Horizon Grand No. 88, Indonesia,Sumatera Selatan</p>
-          <p class="small mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>500 cabang of bussines</p>
+          <p class="small mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Jl. Horizon Grand No. 88, Indonesia, Sumatera Selatan</p>
+          <p class="small mb-2"><i class="fas fa-building me-2 text-primary"></i>500 cabang of business</p>
           <p class="small mb-2"><i class="fas fa-phone me-2 text-primary"></i>+6282186993746</p>
-          <p class="small mb-0"><i class="fas fa-envelope me-2 text-primary"></i> Ceo -  <a href="https://www.instagram.com/rafifhibatullah._" class="text-decoration-none text-white-50">rafifhibatullah._</a></p>
-        </div>
-          <p class="small mb-0"><i class="fas fa-envelope me-2 text-primary"></i> Co founder - ranggagunawan</p>
+          <p class="small mb-1"><i class="fas fa-user-tie me-2 text-primary"></i> CEO - <a href="https://www.instagram.com/rafifhibatullah._" target="_blank" class="text-decoration-none text-white-50">rafifhibatullah._</a></p>
+          <p class="small mb-0"><i class="fas fa-user-friends me-2 text-primary"></i> Co founder - ranggagunawan</p>
         </div>
       </div>
       <hr class="my-4 border-secondary opacity-25">
