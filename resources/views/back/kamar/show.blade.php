@@ -8,10 +8,7 @@
     <!-- Header Section -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" data-aos="fade-down">
         <h1 class="h2">Detail Kamar: {{ $kamar->nama_kamar }}</h1>
-        <div>
-            <a href="{{ route('kamar.edit', $kamar->id) }}" class="btn btn-primary me-2">Edit Kamar</a>
-            <a href="{{ route('kamar.index') }}" class="btn btn-secondary">Kembali</a>
-        </div>
+        
     </div>
 
     <!-- Main Content Table -->
@@ -23,7 +20,7 @@
             </tr>
             <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Tipe Kamar</th>
-                <td>: <span class="badge bg-info text-dark">{{ $kamar->tipe_kamar }} Room</span></td>
+                <td>: <span class=" text-dark">{{ $kamar->tipe_kamar }} Room</span></td>
             </tr>
             <tr data-aos="fade-right" data-aos-delay="250">
                 <th>Harga / Malam</th>

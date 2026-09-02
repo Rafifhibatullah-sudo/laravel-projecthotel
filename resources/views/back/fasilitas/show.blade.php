@@ -7,10 +7,7 @@
     <!-- Header Section -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" data-aos="fade-down">
         <h1 class="h2">Detail Fasilitas: {{ $fasilitas->nama_fasilitas }}</h1>
-        <div>
-            <a href="{{ route('fasilitas.edit', $fasilitas->id) }}" class="btn btn-primary me-2">Edit Fasilitas</a>
-            <a href="{{ route('fasilitas.index') }}" class="btn btn-secondary">Kembali</a>
-        </div>
+        
     </div>
 
     <!-- Main Content Table -->

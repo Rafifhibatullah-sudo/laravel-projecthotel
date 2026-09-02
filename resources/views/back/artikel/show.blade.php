@@ -7,10 +7,6 @@
     <!-- Header Section -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" data-aos="fade-down">
         <h1 class="h2">Detail Artikel: {{ $artikel->judul }}</h1>
-        <div>
-            <a href="{{ route('artikel.edit', $artikel->id) }}" class="btn btn-primary me-2">Edit Artikel</a>
-            <a href="{{ route('artikel.index') }}" class="btn btn-secondary">Kembali</a>
-        </div>
     </div>
 
     <!-- Main Content Table -->
@@ -22,7 +18,7 @@
             </tr>
             <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Kategori</th>
-                <td>: <span class="badge bg-info text-dark">{{ $artikel->kategori }}</span></td>
+                <td>: <span class="text-dark">{{ $artikel->kategori }}</span></td>
             </tr>
             <tr data-aos="fade-right" data-aos-delay="250">
                 <th>Status Publikasi</th>
@@ -61,7 +57,7 @@
         </table>
 
         <!-- Button Section -->
-        <div class="float-end" data-aos="fade-up" data-aos-delay="500">
+        <div class="float-end" data-aos="fade-up" data-aos-delay="200">
             <a href="{{ route('artikel.index') }}" class="btn btn-secondary">Kembali ke Daftar Artikel</a>
         </div>
     </div>

@@ -119,6 +119,7 @@ class KamarController extends Controller
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Dihapus!');
     }
+
     public function reservasis()
 {
     return $this->hasMany(Reservasi::class, 'kamar_id');

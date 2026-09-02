@@ -21,7 +21,7 @@
 <div class="card border-0 shadow-sm rounded-4">
   <div class="card-body p-4">
     <div class="table-responsive">
-      <table class="table table-hover align-middle">
+      <table class="table table-striped table-bordered table table-hover align-middle">
         <thead class="table-light">
           <tr>
             <th>No</th>

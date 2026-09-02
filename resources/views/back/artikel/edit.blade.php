@@ -43,7 +43,7 @@
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label fw-semibold">Gambar Header (Biarkan kosong jika tidak diubah)</label>
+          <label class="form-label fw-semibold">Gambar Header </label>
           <input type="file" name="gambar" class="form-control" accept="image/*">
           @if($artikel->gambar)
             <div class="mt-2">

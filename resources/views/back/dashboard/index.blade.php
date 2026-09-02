@@ -42,7 +42,7 @@
     <div class="card card-stat card-gradient-green text-white p-3 shadow-sm">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <span class="d-block small text-white-50 fw-semibold text-uppercase tracking-wider">Total Fasilitas</span>
+          <span class="d-block small text-white-50 fw-semibold text-uppercase tracking-wider"> Total Fasilitas</span>
           <h2 class="fw-bold mb-0 display-6 mt-1">{{ $totalFasilitas }}</h2>
         </div>
         <div class="icon-shape">
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="border-top border-white border-opacity-10 pt-2">
-        <small class="text-white-50"><i class="feather-14 me-1" data-feather="trending-up"></i> Pesanan masuk via WhatsApp</small>
+        <small class="text-white-50"><i class="feather-14 " data-feather="trending-up"></i> Pesanan masuk via WhatsApp</small>
       </div>
     </div>
   </div>

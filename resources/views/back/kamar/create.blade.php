@@ -53,6 +53,7 @@
           <select name="fasilitas_id[]" class="form-select select2-multiple" multiple="multiple">
             @foreach($fasilitas as $item)
               <option value="{{ $item->id }}">{{ $item->nama_fasilitas }}</option>
+           
             @endforeach
           </select>
           <small class="text-muted">Ketik nama fasilitas untuk mencari dan pilih lebih dari satu.</small>
@@ -72,9 +73,20 @@
 
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- DIPERBAIKI: Menggunakan js/select2.min.js (bukan css/select2.min.js) -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 
 <script>
+  $(document).ready(function() {
+    $('.select2-multiple').select2({
+      theme: 'bootstrap-5',
+      placeholder: "-- Pilih Fasilitas --",
+      allowClear: true
+    });
+  });
+
   var options = {
     filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
     filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}',

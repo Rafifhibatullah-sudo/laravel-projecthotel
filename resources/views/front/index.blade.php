@@ -124,7 +124,7 @@
     <div class="text-center mb-5" style="max-width: 600px; margin: auto;" data-aos="fade-up">
       <span class="text-primary fw-bold text-uppercase small tracking-wider">Layanan Unggulan</span>
       <h2 class="fw-bold text-dark">Fasilitas Mewah Hotel Kami</h2>
-      <p class="text-muted">Kami menyediakan berbagai keunggulan fasilitas untuk menjaga kenyamanan Anda selama menginap.</p>
+      <p class="text-muted">Kami menyediakan berbagai keunggulan fasilitas untuk menjaga kenyamanan Anda selama penginapan.</p>
     </div>
 
     <div class="row g-4">

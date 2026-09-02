@@ -1,5 +1,11 @@
 @extends('back.layout.template')
 
+@push('css')
+<!-- CSS Select2 & Theme Bootstrap 5 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endpush
+
 @section('content')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-3 mb-4 border-bottom" data-aos="fade-down">
   <div>
@@ -79,9 +85,20 @@
 
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- DIPERBAIKI: Menggunakan js/select2.min.js (bukan css/select2.min.js) -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 
 <script>
+  $(document).ready(function() {
+    $('.select2-multiple').select2({
+      theme: 'bootstrap-5',
+      placeholder: "-- Pilih Fasilitas --",
+      allowClear: true
+    });
+  });
+
   var options = {
     filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
     filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}',

@@ -22,7 +22,7 @@
   <div class="card-body p-4">
     <div class="table-responsive">
       <!-- Class 'datatable' ditambahkan di sini -->
-      <table class="table table-hover align-middle datatable w-100">
+      <table class=" table table-striped table-bordered table table-hover align-middle datatable w-100">
         <thead class="table-light">
           <tr>
             <th width="5%">No</th>
