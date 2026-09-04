@@ -26,15 +26,15 @@
                 <th>Harga / Malam</th>
                 <td>: <strong class="text-success">Rp {{ number_format($kamar->harga, 0, ',', '.') }}</strong></td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="300">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Stok Kamar</th>
                 <td>: {{ $kamar->jumlah_kamar }} Unit</td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="350">
+            <tr data-aos="fade-right" data-aos-delay="250">
                 <th>Deskripsi</th>
                 <td>: {!! $kamar->deskripsi  !!}</td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="400">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Foto Kamar</th>
                 <td>
                     @if($kamar->foto)
@@ -46,7 +46,7 @@
                     @endif
                 </td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="450">
+            <tr data-aos="fade-right" data-aos-delay="250">
                 <th>Fasilitas Kamar</th>
                 <td>
                     : 
@@ -57,7 +57,7 @@
                     @endforelse
                 </td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="500">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Tanggal Diperbarui</th>
                 <td>: {{ $kamar->updated_at->format('d M Y, H:i') }} WIB</td>
             </tr>

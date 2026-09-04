@@ -92,7 +92,7 @@
                 </a>
               </h5>
               <p class="text-muted small mb-3">
-                {{ Str::limit($kamar->deskripsi ?? 'Kamar nyaman dengan pemandangan indah dan fasilitas lengkap.', 80) }}
+                {!! Str::limit($kamar->deskripsi ?? 'Kamar nyaman dengan pemandangan indah dan fasilitas lengkap.', 80) !!}
               </p>
             </div>
             <div>

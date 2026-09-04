@@ -34,7 +34,7 @@
 
           <h3 class="fw-bold text-dark mb-3">{{ $kamar->nama_kamar }}</h3>
           <p class="text-muted leading-relaxed mb-4">
-            {{ $kamar->deskripsi ?? 'Kamar ini dirancang khusus untuk kenyamanan maksimal Anda dengan interior modern, tempat tidur premium, dan pemandangan luar biasa.' }}
+            {!! $kamar->deskripsi ?? 'Kamar ini dirancang khusus untuk kenyamanan maksimal Anda dengan interior modern, tempat tidur premium, dan pemandangan luar biasa.' !!}
           </p>
 
           <h5 class="fw-bold text-dark mb-3"><i class="fas fa-concierge-bell text-primary me-2"></i>Fasilitas Kamar Ini</h5>

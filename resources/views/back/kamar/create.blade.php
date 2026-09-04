@@ -23,7 +23,7 @@
         <div class="col-md-6 mb-3">
           <label class="form-label fw-semibold">Tipe Kamar</label>
           <select name="tipe_kamar" class="form-select" required>
-            <option value="">-- Pilih Tipe --</option>
+            <option value="" hidden>-- Pilih Tipe --</option>
             <option value="Single">Single Room</option>
             <option value="Double">Double Room</option>
             <option value="Deluxe">Deluxe Room</option>
