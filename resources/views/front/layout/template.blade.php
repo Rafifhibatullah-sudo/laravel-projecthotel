@@ -97,7 +97,7 @@
           </p>
           <div class="d-flex align-items-center text-muted small">
             <i class="fas fa-map-marker-alt text-danger fs-5 me-2"></i>
-            <span>Jl. Horizon Grand No. 88, Sumatera Selatan, Indonesia</span>
+            <span>Jl. Horizon Grand No. 26, Sumatera Selatan, Indonesia</span>
           </div>
         </div>
 
@@ -112,33 +112,39 @@
     </div>
   </section>
 
+  
+
   <!-- Footer Section -->
+  <div class="progress" style="border-radius: 0;" data-aos="fade-right">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; border-radius: 0;"></div>
+</div>
   <footer class="footer pt-5 pb-4">
     <div class="container" data-aos="fade-up">
       <div class="row g-4">
         <div class="col-md-5">
           <h4 class="fw-bold text-white mb-3"><i class="fas fa-hotel me-2 text-primary"></i>Grand Horizon Hotel</h4>
-          <p class="small">Menyediakan pengalaman menginap berkelas bintang lima puluh dengan fasilitas mewah, kamar nyaman, dan pelayanan terbaik untuk liburan serta perjalanan bisnis Anda.</p>
+          <p class="small">Kami berkomitmen untuk menyediakan pengalaman menginap berkelas bintang lima dengan standar hospitalitas tertinggi. Kami menawarkan fasilitas mewah yang lengkap, pilihan kamar dan suite yang super nyaman, serta pelayanan personal terbaik demi mendukung kesuksesan perjalanan bisnis sekaligus kenyamanan liburan Anda. Dengan memadukan teknologi modern dan sentuhan layanan yang hangat, kami menciptakan ruang ideal bagi Anda untuk bekerja secara produktif maupun bersantai melepas penat dalam kemewahan yang sesungguhnya.</p>
         </div>
         <div class="col-md-3">
           <h6 class="fw-bold text-white mb-3">Navigasi Cepat</h6>
           <ul class="list-unstyled small">
-            <li class="mb-2"><a href="{{ route('front.kamar') }}" class="text-decoration-none text-white-50">Tipe Kamar</a></li>
-            <li class="mb-2"><a href="{{ route('front.fasilitas') }}" class="text-decoration-none text-white-50">Fasilitas Hotel</a></li>
-            <li class="mb-2"><a href="{{ route('front.artikel') }}" class="text-decoration-none text-white-50">Promo Terbaru</a></li>
+            <li class="small mb-2"><a href="{{ route('front.kamar') }}" class="text-decoration-none text-white-50">Tipe Kamar</a></li>
+            <li class="small mb-2"><a href="{{ route('front.fasilitas') }}" class="text-decoration-none text-white-50">Fasilitas Hotel</a></li>
+            <li class="small mb-2"><a href="{{ route('front.artikel') }}" class="text-decoration-none text-white-50">Artikel & Promo Terbaru</a></li>
           </ul>
         </div>
+        
         <div class="col-md-4">
           <h6 class="fw-bold text-white mb-3">Kontak & Lokasi</h6>
-          <p class="small mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Jl. Horizon Grand No. 88, Indonesia, Sumatera Selatan</p>
-          <p class="small mb-2"><i class="fas fa-building me-2 text-primary"></i>500 cabang of business</p>
+          <p class="small mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>  Jl. Horizon Grand No. 26, Indonesia, Sumatera Selatan</p>
+          <p class="small mb-2"><i class="fas fa-building me-2 text-primary"></i> 500 cabang hotel Grand Horizon Indonesia</p>
           <p class="small mb-2"><i class="fas fa-phone me-2 text-primary"></i>+6282186993746</p>
-          <p class="small mb-1"><i class="fas fa-user-tie me-2 text-primary"></i> CEO - <a href="https://www.instagram.com/rafifhibatullah._" target="_blank" class="text-decoration-none text-white-50">rafifhibatullah._</a></p>
-          <p class="small mb-0"><i class="fas fa-user-friends me-2 text-primary"></i> Co founder - ranggagunawan</p>
+          <p class="small mb-2"><i class="fas fa-crown me-2 text-primary"></i>CEO + Owner - <a href="https://www.instagram.com/rafifhibatullah._" target="_blank" class="text-decoration-none text-white-50 underline italic"><i><u>rafifhibatullah._</u></i></a></p>
+          <p class="small mb-2"><i class="fas fa-users me-2 text-primary"></i>Co founder from arabic team - Ahmad Habibi </p>
         </div>
       </div>
       <hr class="my-4 border-secondary opacity-25">
-      <p class="text-center small mb-0">&copy; {{ date('Y') }} Grand Horizon Hotel. All Rights Reserved.</p>
+      <p class="text-center small mb-0">Copyright {{ date('Y') }} Grand Horizon Hotel. All Rights Reserved.</p>
     </div>
   </footer>
 

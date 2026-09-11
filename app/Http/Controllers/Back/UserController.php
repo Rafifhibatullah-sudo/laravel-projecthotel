@@ -50,7 +50,7 @@ class UserController extends Controller
             'role'  => $request->role,
         ];
 
-        if ($request->filled('password')) {
+        if ($request->filled('password')) { //  filled -> Memeriksa apakah bidang input kata sandi diisi oleh admin saat mengedit data.
             $data['password'] = Hash::make($request->password);
         }
 

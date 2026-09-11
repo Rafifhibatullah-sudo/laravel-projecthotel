@@ -21,6 +21,7 @@
         
         <div class="d-flex align-items-center text-muted small mb-4 pb-3 border-bottom">
           <span class="me-4"><i class="far fa-calendar-alt me-1 text-primary"></i> {{ $artikel->created_at->format('d M Y') }}</span>
+          {{-- <span><i class="far fa-eye me-1 text-primary"></i> {!! $artikel->views !!} Views</span> --}}
           <span><i class="far fa-eye me-1 text-primary"></i> {{ $artikel->views }} Views</span>
         </div>
       </div>
@@ -32,11 +33,14 @@
         </div>
       @endif
 
-      <!-- Konten Artikel (Meluncur dari Bawah) -->
-      <div class="lh-lg text-secondary fs-6 p-2" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-        {!! nl2br(e($artikel->isi ?? $artikel->konten)) !!}
+      <div class="text-danger">
+        <hr>
       </div>
 
+     <!-- Konten Artikel (Meluncur dari Bawah) -->
+        <div class="lh-lg text-secondary fs-6 p-2" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
+          {!! $artikel->isi ?? $artikel->konten !!}
+        </div>
     </div>
   </div>
 </div>

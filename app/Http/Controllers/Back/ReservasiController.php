@@ -13,7 +13,7 @@ class ReservasiController extends Controller
     // Tampilkan Seluruh Data Reservasi di Panel Admin
     public function index()
     {
-        $reservasis = Reservasi::with('kamar')->latest()->get();
+        $reservasis = Reservasi::with('kamar')->latest()->get(); // Ambil data reservasi dengan relasi kamar
         return view('back.reservasi.index', compact('reservasis'));
     }
 
@@ -21,7 +21,7 @@ class ReservasiController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,cancelled',
+            'status' => 'required|in:pending,confirmed,cancelled', // Validasi status yang diperbolehkan atau mencegah masuk nya data ilegal
         ]);
 
         $reservasi = Reservasi::findOrFail($id);

@@ -23,7 +23,7 @@
         </div>
 
         <h5 class="fw-bold text-dark mb-2">{{ $item->nama_fasilitas }}</h5>
-        <p class="text-muted small mb-0">{{ $item->deskripsi ?? 'Fasilitas berkualitas tinggi untuk mendukung pengalaman menginap terbaik Anda.' }}</p>
+        <p class="text-muted small mb-0">{!! $item->deskripsi ?? 'Fasilitas berkualitas tinggi untuk mendukung pengalaman menginap terbaik Anda.' !!}</p>
       
       </div>
     </div>

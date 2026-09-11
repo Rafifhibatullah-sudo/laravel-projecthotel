@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h3 class="fw-bold text-dark mb-0"><i class="fas fa-users me-2"></i>Manajemen User & Role</h3>
-    <p class="text-muted small mb-0">Kelola akun admin dan resepsionis hotel.</p>
+    <p class="text-muted small mb-0">Kelola akun admin dan Tamu/resepsionis hotel.</p>
   </div>
   <button class="btn btn-primary rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
     <i class="fas fa-plus me-1"></i> Tambah User Baru
@@ -42,7 +42,7 @@
               @if($user->role == 'admin')
                 <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="fas fa-user-shield me-1"></i>Admin</span>
               @else
-                <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-user-tag me-1"></i>Resepsionis</span>
+                <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-user-tag me-1"></i>Tamu</span>
               @endif
             </td>
             <td class="small text-muted">{{ $user->created_at->format('d M Y') }}</td>
@@ -82,7 +82,7 @@
                       <label class="form-label fw-semibold">Role</label>
                       <select name="role" class="form-select rounded-3">
                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="resepsionis" {{ $user->role == 'resepsionis' ? 'selected' : '' }}>Resepsionis</option>
+                        <option value="Tamu" {{ $user->role == 'Tamu' ? 'selected' : '' }}>Tamu</option>
                       </select>
                     </div>
                     <div class="mb-3">
@@ -126,7 +126,7 @@
           <div class="mb-3">
             <label class="form-label fw-semibold">Role</label>
             <select name="role" class="form-select rounded-3">
-              <option value="resepsionis">Resepsionis</option>
+              <option value="Tamu">Tamu/resepsionis</option>
               <option value="admin">Admin</option>
             </select>
           </div>

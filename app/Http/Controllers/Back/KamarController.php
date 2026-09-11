@@ -100,8 +100,8 @@ class KamarController extends Controller
             'foto'         => $fotoPath,
         ]);
 
-        // Update relasi fasilitas di tabel pivot
-        $kamar->fasilitas()->sync($request->fasilitas ?? []);
+        // Update relasi fasilitas di tabel pivot / sync menghapus relasi fasilitas lama yang tidak dicentang lagi, menjaga relasi yang tetap dicentang, dan menambahkan fasilitas baru yang baru saja dipilih.
+        $kamar->fasilitas()->sync($request->fasilitas ?? []); // Garis ?? [] adalah penanganan fallback. Jika admin mengosongkan semua centang fasilitas saat mengedit, nilai $request->fasilitas bernilai null. Mengirim array kosong [] ke sync() akan mencabut seluruh fasilitas kamar secara aman tanpa menyebabkan error PHP."
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Diperbarui!');
     }

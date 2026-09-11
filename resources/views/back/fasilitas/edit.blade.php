@@ -33,7 +33,7 @@
 
       <div class="mb-3">
         <label class="form-label fw-semibold">Deskripsi (Opsional)</label>
-        <textarea name="deskripsi" id="myeditor" class="form-control" rows="4">{{ old('deskripsi', $fasilitas->deskripsi) }}</textarea>
+        <textarea name="deskripsi" id="myeditor" class="form-control" rows="4">{!! old('deskripsi', $fasilitas->deskripsi) !!}</textarea>
       </div>
 
       <button type="submit" class="btn btn-primary rounded-3 px-4">

@@ -60,7 +60,7 @@
         <h4 class="fw-bold text-dark mb-1"><i class="fas fa-calendar-alt text-primary me-2"></i>Form Booking Online</h4>
         <p class="text-muted small mb-4">Isi formulir di bawah ini untuk memesan kamar secara instan.</p>
 
-        <form action="{{ route('front.storeBooking') }}" method="POST">
+        <form action="{{ route('front.storeBooking') }}" method="POST" target="_blank">
           @csrf
           <input type="hidden" name="kamar_id" value="{{ $kamar->id }}">
 
@@ -105,6 +105,8 @@
           <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-bold shadow-sm">
             <i class="fab fa-whatsapp me-2"></i> Booking & Konfirmasi WA
           </button>
+          
+
         </form>
       </div>
     </div>

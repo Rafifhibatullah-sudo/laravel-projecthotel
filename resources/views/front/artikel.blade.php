@@ -40,7 +40,7 @@
             </h5>
             
             <p class="text-muted small mb-3">
-              {{ Str::limit(strip_tags($artikel->isi), 90) }}
+              {!! Str::limit(strip_tags($artikel->isi), 90) !!}
             </p>
           </div>
 
@@ -60,9 +60,6 @@
     @endforelse
   </div>
 
-  <!-- Pagination -->
-  <div class="mt-5 d-flex justify-content-center" data-aos="fade-up">
-    {{ $artikels->links() }}
-  </div>
+
 </div>
 @endsection

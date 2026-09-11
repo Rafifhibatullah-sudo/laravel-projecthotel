@@ -2,7 +2,7 @@
   <div class="position-sticky pt-3 sidebar-sticky">
     <ul class="nav flex-column">
       
-      <!-- 1. Dashboard (Akses: Admin & Resepsionis) -->
+      <!-- 1. Dashboard (Akses: Admin & Resepsionis) -->, 
       <li class="nav-item">
         <a class="nav-link {{ Request::is('dashboard*') ? 'active' : '' }}" href="/dashboard">
           <span data-feather="home" class="align-text-bottom"></span>
@@ -31,6 +31,8 @@
             Data Kamar
           </a>
         </li>
+        
+        
 
         <!-- 4. Data Fasilitas -->
         <li class="nav-item">
@@ -55,8 +57,10 @@
             Manajemen User
           </a>
         </li>
-      @endif
+         {{-- ringkasan : Request::is() mengecek berdasarkan path URL di address bar (contoh: /dashboard), sedangkan Request::routeIs() mengecek berdasarkan nama route yang didefinisikan di routes/web.php (contoh: kamar.index). routeIs() lebih fleksibel jika URL path sewaktu-waktu diubah." --}}
+         
 
+      @endif 
     </ul>
   </div>
 </nav>

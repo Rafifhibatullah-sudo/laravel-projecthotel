@@ -42,7 +42,6 @@
               <i class="fas fa-door-open me-1"></i> Cek Ketersediaan
             </button>
           </div>
-
         </form>
       </div>
     </div>
@@ -135,7 +134,7 @@
             <i class="fas fa-concierge-bell fa-lg"></i>
           </div>
           <h6 class="fw-bold text-dark mb-1">{{ $item->nama_fasilitas }}</h6>
-          <small class="text-muted d-block">{{ Str::limit($item->deskripsi ?? 'Fasilitas terbaik hotel', 50) }}</small>
+          <small class="text-muted d-block">{!! Str::limit($item->deskripsi ?? 'Fasilitas terbaik hotel', 50) !!}</small>
         </div>
       </div>
       @empty

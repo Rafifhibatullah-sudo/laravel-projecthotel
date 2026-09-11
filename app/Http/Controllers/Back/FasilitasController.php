@@ -20,19 +20,20 @@ class FasilitasController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_fasilitas' => 'required',
-            'deskripsi'      => 'nullable',
-        ]);
+{
+    $request->validate([
+        'nama_fasilitas' => 'required',
+        'deskripsi' => 'required',
+    ]);
 
-        Fasilitas::create([
-            'nama_fasilitas' => $request->nama_fasilitas,
-            'deskripsi'      => $request->deskripsi,
-        ]);
+    Fasilitas::create([
+        'nama_fasilitas' => $request->nama_fasilitas,
+        // Gunakan strip_tags untuk menghapus <p>, &nbsp;, dll.
+        'deskripsi' => strip_tags($request->deskripsi), 
+    ]);
 
-        return redirect()->route('fasilitas.index')->with('success', 'Fasilitas Berhasil Ditambahkan!');
-    }
+    return redirect()->route('fasilitas.index')->with('success', 'Data berhasil disimpan');
+}
 
     public function edit($id)
     {
@@ -51,11 +52,13 @@ class FasilitasController extends Controller
 
         $fasilitas->update([
             'nama_fasilitas' => $request->nama_fasilitas,
-            'deskripsi'      => $request->deskripsi,
+            'deskripsi'      => strip_tags($request->deskripsi),
         ]);
 
         return redirect()->route('fasilitas.index')->with('success', 'Fasilitas Berhasil Diperbarui!');
     }
+
+
 
     public function show($id)
     {
@@ -63,12 +66,13 @@ class FasilitasController extends Controller
         return view('back.fasilitas.show', compact('fasilitas'));
     }
 
+
     public function destroy($id)
     {
         $fasilitas = Fasilitas::findOrFail($id);
 
         // Lepas relasi di tabel pivot sebelum dihapus agar data aman
-        $fasilitas->kamars()->detach();
+        $fasilitas->kamars()->detach(); // <- relasi menggunakan tabel pivot $fasilitas->kamars()->detach(): Karena hubungan antara Fasilitas dan Kamar adalah Many-to-Many, Anda harus lepas relasi di tabel pivot sebelum menghapus Fasilitas.
         $fasilitas->delete();
 
         return redirect()->route('fasilitas.index')->with('success', 'Fasilitas Berhasil Dihapus!');

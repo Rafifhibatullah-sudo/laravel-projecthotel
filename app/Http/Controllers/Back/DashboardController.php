@@ -14,18 +14,26 @@ class DashboardController extends Controller
     {
         $totalKamar     = Kamar::count();
         $totalFasilitas = Fasilitas::count();
-        $totalArtikel = Artikel::count();
+        $totalArtikel   = Artikel::count();
         $totalReservasi = Reservasi::count();
 
-        // Ambil 5 data kamar terbaru untuk tabel ringkasan
-        $kamarTerbaru   = Kamar::latest()->take(5)->get();
+        // Poin 1: Menghitung jumlah reservasi berdasarkan badge status
+        $pendingReservasi   = Reservasi::where('status', 'pending')->count();
+        $confirmedReservasi = Reservasi::where('status', 'confirmed')->count();
+        $cancelledReservasi = Reservasi::where('status', 'cancelled')->count();
+
+        // Poin 2: Mengambil 5 data pemesanan/tamu terbaru yang melakukan booking kamar
+        $reservasiTerbaru = Reservasi::with('kamar')->latest()->take(5)->get();
 
         return view('back.dashboard.index', compact(
             'totalKamar', 
             'totalFasilitas', 
             'totalArtikel', 
             'totalReservasi',
-            'kamarTerbaru'
+            'pendingReservasi',
+            'confirmedReservasi',
+            'cancelledReservasi',
+            'reservasiTerbaru'
         ));
     }
 }

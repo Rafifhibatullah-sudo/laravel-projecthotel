@@ -20,6 +20,7 @@
           <input type="text" name="judul" class="form-control" placeholder="Contoh: Promo Special Diskon Akhir Tahun" required>
         </div>
 
+        
         <div class="col-md-4 mb-3">
           <label class="form-label fw-semibold">Kategori</label>
           <select name="kategori" class="form-select" required>
@@ -44,7 +45,7 @@
           <label class="form-label fw-semibold">Status Publikasi</label>
           <select name="status" class="form-select" required>
             <option value="publish">Publish</option>
-            <option value="draft">Private</option>
+            <option value="draft">draft</option>
           </select>
         </div>
 

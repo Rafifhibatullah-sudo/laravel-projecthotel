@@ -1,6 +1,6 @@
 @extends('back.layout.template')
 
-@section('title', 'Detail Artikel - Admin')
+@section('title', 'Detail Artikel - Halaman Admin')
 
 @section('content')
 <main class="w-100 px-md-4 mb-5">
@@ -20,7 +20,7 @@
                 <th>Kategori</th>
                 <td>: <span class="text-dark">{{ $artikel->kategori }}</span></td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="250">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Status Publikasi</th>
                 <td>: 
                     @if($artikel->status == 'publish')
@@ -30,7 +30,7 @@
                     @endif
                 </td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="300">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Gambar Header</th>
                 <td>
                     @if($artikel->gambar)
@@ -42,15 +42,19 @@
                     @endif
                 </td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="350">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Isi Artikel</th>
                 <td>: {!! $artikel->isi !!}</td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="400">
+            <tr data-aos="fade-right" data-aos-delay="200">
+                <th>Dilihat</th>
+                <td>: {{ $artikel->views }} x</td>
+            </tr>
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Tanggal Dibuat</th>
                 <td>: {{ $artikel->created_at ? $artikel->created_at->format('d M Y, H:i') . ' WIB' : '-' }}</td>
             </tr>
-            <tr data-aos="fade-right" data-aos-delay="450">
+            <tr data-aos="fade-right" data-aos-delay="200">
                 <th>Tanggal Diperbarui</th>
                 <td>: {{ $artikel->updated_at ? $artikel->updated_at->format('d M Y, H:i') . ' WIB' : '-' }}</td>
             </tr>

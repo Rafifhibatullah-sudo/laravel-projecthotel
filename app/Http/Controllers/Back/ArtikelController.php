@@ -27,9 +27,10 @@ class ArtikelController extends Controller
             'judul'    => 'required|unique:artikels,judul',
             'kategori' => 'required',
             'isi'      => 'required',
-            'status'   => 'required|in:publish,draft',
+            'status'   => 'required|in:publish,private',
             'gambar'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+        
 
         $gambarPath = null;
         if ($request->hasFile('gambar')) {

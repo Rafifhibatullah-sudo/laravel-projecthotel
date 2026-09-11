@@ -45,7 +45,7 @@ class FrontController extends Controller
     // Halaman Artikel & Detail Artikel
     public function artikel()
     {
-        $artikels = Artikel::where('status', 'publish')->latest()->paginate(6);
+        $artikels = Artikel::where('status', 'publish')->latest()->get();
         return view('front.artikel', compact('artikels'));
     }
 
@@ -78,7 +78,7 @@ class FrontController extends Controller
         // Hitung durasi menginap (hari)
         $checkIn  = new \DateTime($request->check_in);
         $checkOut = new \DateTime($request->check_out);
-        $durasi   = $checkIn->diff($checkOut)->days;
+        $durasi   = $checkIn->diff($checkOut)->days; // Class \DateTime & diff(): Murni menghitung selisih hari antara dua tanggal 
         if ($durasi == 0) $durasi = 1;
 
         // Hitung total harga
@@ -115,6 +115,6 @@ class FrontController extends Controller
 
         $urlWA = "https://wa.me/{$nomorWAAdmin}?text=" . urlencode($pesan);
 
-        return redirect()->away($urlWA);
+        return redirect()->away($urlWA); // Mengarahkan pengguna keluar dari domain website ke domain eksternal ([https://wa.me/](https://wa.me/)...).
     }
 }

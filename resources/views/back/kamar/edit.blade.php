@@ -73,7 +73,7 @@
 
         <div class="col-md-12 mb-3">
           <label class="form-label fw-semibold">Deskripsi Kamar</label>
-          <textarea name="deskripsi" id="myeditor" class="form-control" rows="4">{{ $kamar->deskripsi }}</textarea>
+          <textarea name="deskripsi" id="myeditor" class="form-control" rows="4">{!! $kamar->deskripsi !!}</textarea>
         </div>
       </div>
 

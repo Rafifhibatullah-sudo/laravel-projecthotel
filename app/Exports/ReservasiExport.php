@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ReservasiExport implements FromCollection, WithHeadings, WithMapping
+class ReservasiExport implements FromCollection, WithHeadings, WithMapping //<- Menggunakan WithMapping jika tidak data nya akan berubah format mentah seperti di database
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -36,7 +36,7 @@ class ReservasiExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-    // Memetakan Isi Data per Baris Excel
+    // Memetakan Isi Data per Baris Excel (pengelola format data)
     public function map($reservasi): array
     {
         return [

@@ -13,23 +13,27 @@ use Illuminate\Support\Facades\Route;
 // Rute Login, Register, Logout bawaan Laravel
 Auth::routes();
 
-// ----------------------------------------------------
-// ROUTE YANG WAJIB LOGIN (Ditolak jika belum login)
-// ----------------------------------------------------
+// ====================================================
+// 1. ROUTE PUBLIC (Dapat diakses Tamu TANPA Login) bagian web depan
+// ====================================================
+Route::get('/', [FrontController::class, 'index'])->name('front.index');
+Route::get('/kamar-hotel', [FrontController::class, 'kamar'])->name('front.kamar');
+Route::get('/kamar-hotel/{id}', [FrontController::class, 'detailKamar'])->name('front.detailKamar');
+Route::get('/fasilitas-hotel', [FrontController::class, 'fasilitas'])->name('front.fasilitas');
+Route::get('/artikel-hotel', [FrontController::class, 'artikel'])->name('front.artikel');
+Route::get('/artikel-hotel/{slug}', [FrontController::class, 'detailArtikel'])->name('front.detailArtikel');
+// Proses Pemesanan Kamar (Pesan Online Wajib Login)
+Route::post('/booking-online', [FrontController::class, 'storeBooking'])->name('front.storeBooking');
+
+
+// ====================================================
+// 2. ROUTE PRIVATE (Wajib Login Dulu) alias untuk bagian dashboard admin
+// ====================================================
 Route::middleware(['auth'])->group(function () {
 
-    // 1. DIBUKA UNTUK SEMUA ROLE YANG SUDAH LOGIN (Tamu & Admin)
-    Route::middleware(['role:admin,tamu'])->group(function () {
-        // Halaman Utama / Front-End (Sekarang Wajib Login Dulu)
-        Route::get('/', [FrontController::class, 'index'])->name('front.index');
-        Route::get('/kamar-hotel', [FrontController::class, 'kamar'])->name('front.kamar');
-        Route::get('/kamar-hotel/{id}', [FrontController::class, 'detailKamar'])->name('front.detailKamar');
-        Route::get('/fasilitas-hotel', [FrontController::class, 'fasilitas'])->name('front.fasilitas');
-        Route::get('/artikel-hotel', [FrontController::class, 'artikel'])->name('front.artikel');
-        Route::get('/artikel-hotel/{slug}', [FrontController::class, 'detailArtikel'])->name('front.detailArtikel');
-        Route::post('/booking-online', [FrontController::class, 'storeBooking'])->name('front.storeBooking');
 
-        // Dashboard & Reservasi Saya
+    // Akses Dashboard & Reservasi
+    Route::middleware(['role:admin,tamu'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
         Route::put('/reservasi/{id}/status', [ReservasiController::class, 'updateStatus'])->name('reservasi.updateStatus');
@@ -37,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/reservasi/{id}', [ReservasiController::class, 'destroy'])->name('reservasi.destroy');
     });
 
-    // 2. KHUSUS ADMIN SAJA (Kelola Data Master)
+    // KHUSUS ADMIN (Kelola Data Master)
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('kamar', KamarController::class);
         Route::resource('fasilitas', FasilitasController::class);

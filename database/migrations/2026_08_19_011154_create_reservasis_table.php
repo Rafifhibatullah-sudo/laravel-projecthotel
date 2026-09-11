@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_booking')->unique(); // Contoh: RSV-20260819-001
+            $table->string('kode_booking')->unique();
             $table->foreignId('kamar_id')->constrained('kamars')->onDelete('cascade');
             $table->string('nama_pemesan');
             $table->string('email');
@@ -19,7 +19,9 @@ return new class extends Migration
             $table->date('check_out');
             $table->integer('jumlah_kamar')->default(1);
             $table->bigInteger('total_harga');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            // Menambahkan status 'in' dan 'out'
+            $table->enum('status', ['pending', 'confirmed', 'in', 'out', 'cancelled'])->default('pending');
+            $table->string('bukti_pembayaran')->nullable(); // Menampung file bukti transfer/bayar
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
