@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h3 class="fw-bold text-dark mb-0"><i class="fas fa-users me-2"></i>Manajemen User & Role</h3>
-    <p class="text-muted small mb-0">Kelola akun admin dan Tamu/resepsionis hotel.</p>
+    <p class="text-muted small mb-0">Kelola akun Admin, Frontline (Resepsionis), dan Media.</p>
   </div>
   <button class="btn btn-primary rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
     <i class="fas fa-plus me-1"></i> Tambah User Baru
@@ -21,7 +21,7 @@
 <div class="card border-0 shadow-sm rounded-4">
   <div class="card-body p-4">
     <div class="table-responsive">
-      <table class="table table-striped table-bordered table table-hover align-middle">
+      <table class="table table-striped table-bordered table-hover align-middle">
         <thead class="table-light">
           <tr>
             <th>No</th>
@@ -41,8 +41,12 @@
             <td>
               @if($user->role == 'admin')
                 <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="fas fa-user-shield me-1"></i>Admin</span>
+              @elseif($user->role == 'frontline')
+                <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-concierge-bell me-1"></i>Frontline</span>
+              @elseif($user->role == 'media')
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="fas fa-camera me-1"></i>Media</span>
               @else
-                <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-user-tag me-1"></i>Tamu</span>
+                <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="fas fa-user me-1"></i>Tamu</span>
               @endif
             </td>
             <td class="small text-muted">{{ $user->created_at->format('d M Y') }}</td>
@@ -80,9 +84,10 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-label fw-semibold">Role</label>
-                      <select name="role" class="form-select rounded-3">
+                      <select name="role" class="form-select rounded-3" required>
                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="Tamu" {{ $user->role == 'Tamu' ? 'selected' : '' }}>Tamu</option>
+                        <option value="frontline" {{ $user->role == 'frontline' ? 'selected' : '' }}>Frontline (Resepsionis)</option>
+                        <option value="media" {{ $user->role == 'media' ? 'selected' : '' }}>Media</option>
                       </select>
                     </div>
                     <div class="mb-3">
@@ -125,9 +130,10 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">Role</label>
-            <select name="role" class="form-select rounded-3">
-              <option value="Tamu">Tamu/resepsionis</option>
+            <select name="role" class="form-select rounded-3" required>
+              <option value="frontline">Frontline (Resepsionis)</option>
               <option value="admin">Admin</option>
+              <option value="media">Media</option>
             </select>
           </div>
           <div class="mb-3">

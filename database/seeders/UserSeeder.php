@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Akun Admin
+        // 1. Akun Admin Utama
         User::create([
             'name'     => 'Administrator Hotel',
             'email'    => 'admin@hotel.com',
@@ -18,12 +18,20 @@ class UserSeeder extends Seeder
             'role'     => 'admin',
         ]);
 
-        // 2. Akun Tamu
+        // 2. Akun Frontline / Resepsionis
         User::create([
-            'name'     => 'Tamu Hotel',
-            'email'    => 'tamu@hotel.com',
+            'name'     => 'Frontline Hotel',
+            'email'    => 'frontline@hotel.com',
             'password' => Hash::make('password123'),
-            'role'     => 'tamu',
+            'role'     => 'frontline',
+        ]);
+
+        // 3. Akun Media (Konten & Artikel)
+        User::create([
+            'name'     => 'Media Officer',
+            'email'    => 'media@hotel.com',
+            'password' => Hash::make('password123'),
+            'role'     => 'media',
         ]);
     }
 }

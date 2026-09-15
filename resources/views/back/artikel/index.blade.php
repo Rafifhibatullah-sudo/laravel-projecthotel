@@ -50,7 +50,7 @@
               @if($row->status == 'publish')
                 <span class="badge bg-success">Publish</span>
               @else
-                <span class="badge bg-danger text-dark">Private</span>
+                <span class="badge bg-danger text-dark">Draft</span>
               @endif
             </td>
             <td><i class="fas fa-eye me-1 text-muted"></i>{{ $row->views }} x</td>

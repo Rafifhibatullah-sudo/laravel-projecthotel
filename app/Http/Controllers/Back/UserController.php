@@ -21,7 +21,7 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role'     => 'required|in:admin,tamu',
+            'role'     => 'required|in:admin,frontline,media',
         ]);
 
         User::create([
@@ -41,7 +41,7 @@ class UserController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'role'  => 'required|in:admin,tamu',
+            'role'  => 'required|in:admin,frontline,media',
         ]);
 
         $data = [
@@ -50,7 +50,7 @@ class UserController extends Controller
             'role'  => $request->role,
         ];
 
-        if ($request->filled('password')) { //  filled -> Memeriksa apakah bidang input kata sandi diisi oleh admin saat mengedit data.
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 

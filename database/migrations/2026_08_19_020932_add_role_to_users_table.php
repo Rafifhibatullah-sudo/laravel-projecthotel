@@ -9,15 +9,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Menambahkan 3 role pengelola + tamu
-            $table->enum('role', ['admin', 'frontliner', 'media', 'tamu'])->default('tamu')->after('email');
+            // Tambahkan kolom role jika belum ada
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->enum('role', ['admin', 'frontline', 'media'])->default('frontline')->after('password');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            if (Schema::hasColumn('users', 'role')) {
+                $table->dropColumn('role');
+            }
         });
     }
 };

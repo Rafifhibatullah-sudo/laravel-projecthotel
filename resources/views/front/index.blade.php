@@ -18,23 +18,24 @@
       Temukan kenyamanan terbaik dengan fasilitas bintang lima, kamar elegan, dan pelayanan ramah sepanjang hari.
     </p>
 
-    <!-- Floating Booking Box dengan Animasi Zoom In -->
+    <!-- Floating Booking Box -->
     <div class="card border-0 shadow-lg rounded-4 p-3 bg-white text-dark text-start mx-auto" 
          style="max-width: 950px; margin-bottom: -150px;" 
          data-aos="zoom-in" 
          data-aos-delay="400">
       <div class="card-body">
         <h5 class="fw-bold mb-3 text-primary"><i class="fas fa-search me-2"></i>Cari & Booking Kamar</h5>
-        <form action="{{ route('front.kamar') }}" method="GET" class="row g-3 align-items-end">
+        
+        <form action="{{ route('front.checkAvailability') }}" method="GET" class="row g-3 align-items-end">
           
           <div class="col-md-4">
             <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-calendar-check me-1 text-primary"></i> Tanggal Check In</label>
-            <input type="date" name="check_in" class="form-control form-control-lg fs-6" required>
+            <input type="date" name="check_in" class="form-control form-control-lg fs-6" value="{{ request('check_in') }}" required>
           </div>
 
           <div class="col-md-4">
             <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-calendar-times me-1 text-danger"></i> Tanggal Check Out</label>
-            <input type="date" name="check_out" class="form-control form-control-lg fs-6" required>
+            <input type="date" name="check_out" class="form-control form-control-lg fs-6" value="{{ request('check_out') }}" required>
           </div>
 
           <div class="col-md-4">
@@ -51,7 +52,7 @@
 <!-- Space Pendorong untuk Floating Box -->
 <div style="height: 100px;"></div>
 
-<!-- Section Kamar Populer -->
+<!-- Section Kamar Populer (Menampilkan 3 Kamar) -->
 <section class="py-5">
   <div class="container py-4">
     <div class="d-flex justify-content-between align-items-end mb-4" data-aos="fade-right">
@@ -65,24 +66,36 @@
     </div>
 
     <div class="row g-4">
-      @forelse($kamars as $index => $kamar)
-      <!-- Animasi Bertahap (Staggered Animation) menggunakan Loop Index -->
+      @forelse($kamars->take(3) as $index => $kamar)
+      @php
+          $stokTersedia = isset($kamar->sisa_stok) ? $kamar->sisa_stok : ($kamar->stok ?? $kamar->jumlah_kamar ?? 0);
+      @endphp
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ 100 * ($index + 1) }}">
-        <div class="card card-kamar h-100 shadow-sm overflow-hidden">
-          <div class="position-relative">
-            <a href="{{ route('front.detailKamar', $kamar->id) }}">
-              @if($kamar->foto)
-                <img src="{{ asset('storage/' . $kamar->foto) }}" class="card-img-top" alt="{{ $kamar->nama_kamar }}" style="height: 230px; object-fit: cover;">
-              @else
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 230px;">
-                  <i class="fas fa-image fa-2x"></i>
-                </div>
-              @endif
-            </a>
-            <span class="badge bg-primary position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill">
+        <div class="card card-kamar card-hover h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+          
+          <!-- Foto Kamar: Tanpa Link <a> (Tidak Bisa Diklik) -->
+          <div class="position-relative overflow-hidden">
+            @if($kamar->foto)
+              <img src="{{ asset('storage/' . $kamar->foto) }}" class="card-img-top" alt="{{ $kamar->nama_kamar }}" style="height: 230px; object-fit: cover; cursor: default;">
+            @else
+              <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 230px; cursor: default;">
+                <i class="fas fa-image fa-2x"></i>
+              </div>
+            @endif
+            
+            <!-- Badge Tipe Kamar (Kanan Atas) -->
+            <span class="badge bg-primary position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill shadow-sm">
               {{ $kamar->tipe_kamar }}
             </span>
+
+            <!-- Badge Stok Habis (Kiri Atas - Merah) -->
+            @if($stokTersedia <= 0)
+              <span class="badge bg-danger position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+                <i class="fas fa-ban me-1"></i> Stok Habis
+              </span>
+            @endif
           </div>
+
           <div class="card-body p-4 d-flex flex-column justify-content-between">
             <div>
               <h5 class="card-title fw-bold text-dark mb-2">
@@ -91,26 +104,45 @@
                 </a>
               </h5>
               <p class="text-muted small mb-3">
-                {!! Str::limit($kamar->deskripsi ?? 'Kamar nyaman dengan pemandangan indah dan fasilitas lengkap.', 80) !!}
+                {!! Str::limit(strip_tags($kamar->deskripsi ?? 'Kamar nyaman dengan fasilitas lengkap.'), 80) !!}
               </p>
+
+              <!-- Status Stok Ketersediaan -->
+              <div class="mb-3">
+                @if($stokTersedia > 0)
+                  <small class="text-success fw-semibold"><i class="fas fa-check-circle me-1"></i> Tersedia: {{ $stokTersedia }} Unit</small>
+                @else
+                  <small class="text-danger fw-semibold"><i class="fas fa-times-circle me-1"></i> Tidak Tersedia</small>
+                @endif
+              </div>
             </div>
+
             <div>
               <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
                 <div>
                   <span class="text-muted small d-block">Harga per malam</span>
                   <span class="fw-bold text-success fs-5">Rp {{ number_format($kamar->harga, 0, ',', '.') }}</span>
                 </div>
-                <a href="{{ route('front.detailKamar', $kamar->id) }}" class="btn btn-primary rounded-3 px-3">
-                  Pesan Sekarang <i class="fas fa-chevron-right ms-1 fa-xs"></i>
-                </a>
+
+                @if($stokTersedia > 0)
+                  <a href="{{ route('front.detailKamar', $kamar->id) }}" class="btn btn-primary rounded-3 px-3 shadow-sm">
+                    Pesan Sekarang <i class="fas fa-chevron-right ms-1 fa-xs"></i>
+                  </a>
+                @else
+                  <button class="btn btn-secondary rounded-3 px-3 shadow-sm" disabled style="background-color: #9ca3af; border: none;">
+                    Stok Habis
+                  </button>
+                @endif
               </div>
             </div>
           </div>
+
         </div>
       </div>
       @empty
       <div class="col-12 text-center py-5">
-        <p class="text-muted">Belum ada kamar yang tersedia saat ini.</p>
+        <i class="fas fa-bed fa-3x mb-3 text-secondary"></i>
+        <p class="text-muted">Belum ada data kamar yang tersedia saat ini.</p>
       </div>
       @endforelse
     </div>
@@ -128,7 +160,7 @@
 
     <div class="row g-4">
       @forelse($fasilitas as $index => $item)
-      <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="{{ 100 * ($index + 1) }}">
+      <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="{{ 100 * ($index + 1) }}">
         <div class="p-4 rounded-4 bg-light text-center h-100 border border-light-subtle card-hover">
           <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
             <i class="fas fa-concierge-bell fa-lg"></i>

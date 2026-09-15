@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<!-- Grid Kartu Statistik -->
+<!-- Grid Kartu Statistik Utama -->
 <div class="row g-3 mb-4">
 
   <!-- Total Kamar -->
@@ -92,9 +92,41 @@
 
 </div>
 
-<!-- Poin 1: Status Badge Reservasi Ringkasan -->
+<!-- Status Badge Activity Hari Ini & Reservasi Summary -->
 <div class="row g-3 mb-4" data-aos="fade-up">
-  <div class="col-12 col-md-4">
+
+  <!-- Check-in Hari Ini -->
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 p-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <span class="text-success fw-bold text-uppercase small">Check-in Hari Ini</span>
+          <h3 class="fw-bold mb-0 text-dark">{{ $checkInHariIni }}</h3>
+        </div>
+        <span class="badge bg-success px-3 py-2 rounded-pill d-flex align-items-center">
+          <span data-feather="log-in" class="me-1" style="width:14px; height:14px;"></span> Check-In
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-out Hari Ini -->
+  <div class="col-12 col-sm-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 bg-info bg-opacity-10 p-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <span class="text-info fw-bold text-uppercase small">Check-out Hari Ini</span>
+          <h3 class="fw-bold mb-0 text-dark">{{ $checkOutHariIni }}</h3>
+        </div>
+        <span class="badge bg-info px-3 py-2 rounded-pill d-flex align-items-center">
+          <span data-feather="log-out" class="me-1" style="width:14px; height:14px;"></span> Check-Out
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending -->
+  <div class="col-12 col-sm-6 col-md-3">
     <div class="card border-0 shadow-sm rounded-4 bg-warning bg-opacity-10 p-3">
       <div class="d-flex align-items-center justify-content-between">
         <div>
@@ -106,19 +138,8 @@
     </div>
   </div>
 
-  <div class="col-12 col-md-4">
-    <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 p-3">
-      <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <span class="text-success fw-bold text-uppercase small">Terkonfirmasi</span>
-          <h3 class="fw-bold mb-0 text-dark">{{ $confirmedReservasi }}</h3>
-        </div>
-        <span class="badge bg-success px-3 py-2 rounded-pill">Confirmed</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-12 col-md-4">
+  <!-- Dibatalkan -->
+  <div class="col-12 col-sm-6 col-md-3">
     <div class="card border-0 shadow-sm rounded-4 bg-danger bg-opacity-10 p-3">
       <div class="d-flex align-items-center justify-content-between">
         <div>
@@ -129,16 +150,17 @@
       </div>
     </div>
   </div>
+
 </div>
 
-<!-- Poin 2: Tabel Tamu / Pemesanan Kamar Terbaru -->
+<!-- Tabel Tamu / Pemesanan Kamar Terbaru -->
 <div class="card border-0 shadow-sm rounded-4" data-aos="fade-up" data-aos-delay="500">
   <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
     <div>
       <h5 class="fw-bold text-dark mb-0">Daftar Reservasi & Booking Terbaru</h5>
       <small class="text-muted">Data tamu yang sedang atau sudah memesan kamar</small>
     </div>
-    <a href="{{ route('reservasi.index') }}" class="btn btn-sm btn-outline-primary rounded-3">Lihat Semua Data</a>
+    
   </div>
   <div class="card-body px-4 pb-4">
     <div class="table-responsive">

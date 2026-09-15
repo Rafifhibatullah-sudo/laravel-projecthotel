@@ -45,7 +45,7 @@ class KamarController extends Controller
             'tipe_kamar'   => $request->tipe_kamar,
             'harga'        => $request->harga,
             'jumlah_kamar' => $request->jumlah_kamar,
-            'deskripsi'    => $request->deskripsi,
+            'deskripsi'    => strip_tags($request->deskripsi),
             'foto'         => $fotoPath,
         ]);
 
@@ -96,7 +96,7 @@ class KamarController extends Controller
             'tipe_kamar'   => $request->tipe_kamar,
             'harga'        => $request->harga,
             'jumlah_kamar' => $request->jumlah_kamar,
-            'deskripsi'    => $request->deskripsi,
+            'deskripsi'    => strip_tags($request->deskripsi),
             'foto'         => $fotoPath,
         ]);
 

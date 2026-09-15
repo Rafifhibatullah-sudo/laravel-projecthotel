@@ -27,7 +27,7 @@ class ArtikelController extends Controller
             'judul'    => 'required|unique:artikels,judul',
             'kategori' => 'required',
             'isi'      => 'required',
-            'status'   => 'required|in:publish,private',
+            'status'   => 'required|in:publish,draft',
             'gambar'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
         
@@ -41,7 +41,7 @@ class ArtikelController extends Controller
             'judul'    => $request->judul,
             'slug'     => Str::slug($request->judul),
             'kategori' => $request->kategori,
-            'isi'      => $request->isi,
+            'isi'      => strip_tags($request->isi),
             'status'   => $request->status,
             'gambar'   => $gambarPath,
             'views'    => 0,
@@ -80,7 +80,7 @@ class ArtikelController extends Controller
             'judul'    => $request->judul,
             'slug'     => Str::slug($request->judul),
             'kategori' => $request->kategori,
-            'isi'      => $request->isi,
+            'isi'      => strip_tags($request->isi),
             'status'   => $request->status,
             'gambar'   => $gambarPath,
         ]);
