@@ -5,61 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukti Pembayaran - {{ $reservasi->kode_booking }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .invoice-card {
-            max-width: 800px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        /* KHUSUS UNTUK PROSES CETAK / SIMPAN PDF */
-        @media print {
-            /* Sembunyikan elemen navigasi & tombol */
-            .no-print {
-                display: none !important;
-            }
-
-            /* Reset margin & background halaman agar pas di kertas A4 */
-            body {
-                background-color: #ffffff !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .container {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            .invoice-card {
-                box-shadow: none !important;
-                border: none !important;
-                margin: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 10px !important;
-            }
-
-            /* Hilangkan warna background tabel striping agar hemat tinta & rapi */
-            .table-striped>tbody>tr:nth-of-type(odd)>* {
-                background-color: transparent !important;
-            }
-
-            /* Pastikan teks tetap hitam jelas saat dicetak */
-            * {
-                color: #000000 !important;
-            }
-        }
-    </style>
+   <link href="{{ asset('back/css/pdf.css') }}" rel="stylesheet">
 </head>
 <body>
 
@@ -72,7 +18,7 @@
             
             <!-- Fungsi JavaScript Otomatis Membuka Dialog Print Browser -->
             <button onclick="cetakPDF()" class="btn btn-primary">
-                🖨️ Cetak / Download PDF
+                 Cetak / Download PDF
             </button>
         </div>
 
