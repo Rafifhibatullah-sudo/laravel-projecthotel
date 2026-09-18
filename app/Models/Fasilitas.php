@@ -17,6 +17,6 @@ class Fasilitas extends Model
     // Relasi Many-to-Many ke Model Kamar
     public function kamars()
     {
-        return $this->belongsToMany(Kamar::class, 'kamar_fasilitas');
+        return $this->belongsToMany(Kamar::class, 'kamar_fasilitas', 'fasilitas_id', 'kamar_id');
     }
 }

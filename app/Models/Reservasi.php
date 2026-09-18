@@ -21,11 +21,14 @@ class Reservasi extends Model
         'total_harga',
         'status',
         'catatan',
+        'bukti_pembayaran',
     ];
 
-    // Relasi ke Model Kamar
+    /**
+     * Relasi ke Model Kamar
+     */
     public function kamar()
     {
-        return $table = $this->belongsTo(Kamar::class, 'kamar_id');
+        return $this->belongsTo(Kamar::class, 'kamar_id');
     }
 }

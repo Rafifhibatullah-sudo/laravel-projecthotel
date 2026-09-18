@@ -99,7 +99,7 @@
           <div class="card-body p-4 d-flex flex-column justify-content-between">
             <div>
               <h5 class="card-title fw-bold text-dark mb-2">
-                <a href="{{ route('front.detailKamar', $kamar->id) }}" class="text-decoration-none text-dark">
+                <a href="{{ route('front.detailKamar', $kamar->slug) }}" class="text-decoration-none text-dark">
                   {{ $kamar->nama_kamar }}
                 </a>
               </h5>
@@ -125,7 +125,7 @@
                 </div>
 
                 @if($stokTersedia > 0)
-                  <a href="{{ route('front.detailKamar', $kamar->id) }}" class="btn btn-primary rounded-3 px-3 shadow-sm">
+                  <a href="{{ route('front.detailKamar', $kamar->slug) }}" class="btn btn-primary rounded-3 px-3 shadow-sm">
                     Pesan Sekarang <i class="fas fa-chevron-right ms-1 fa-xs"></i>
                   </a>
                 @else

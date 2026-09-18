@@ -6,14 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Models\Fasilitas;
 use App\Models\Kamar;
 use App\Models\Reservasi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class KamarController extends Controller
 {
+
     public function index()
     {
-        $kamars = Kamar::latest()->get();
+        $today = Carbon::today()->toDateString();
+
+        // Mengambil semua kamar beserta kalkulasi sisa stok real-time
+        $kamars = Kamar::latest()->get()->map(function ($kamar) use ($today) {
+            // Hitung kamar yang terpakai/terbooking untuk hari ini
+            $kamarTerpakai = Reservasi::where('kamar_id', $kamar->id)
+                ->whereDate('check_in', '<=', $today)
+                ->whereDate('check_out', '>', $today)
+                ->whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'Check In'])
+                ->sum('jumlah_kamar');
+
+            // Total stok awal dari database
+            $totalStok = $kamar->jumlah_kamar ?? $kamar->stok ?? 0;
+
+            // Hitung sisa stok real-time
+            $kamar->sisa_stok = max(0, $totalStok - $kamarTerpakai);
+            $kamar->terpakai = $kamarTerpakai;
+
+            return $kamar;
+        });
+
         return view('back.kamar.index', compact('kamars'));
     }
 
@@ -100,8 +122,7 @@ class KamarController extends Controller
             'foto'         => $fotoPath,
         ]);
 
-        // Update relasi fasilitas di tabel pivot / sync menghapus relasi fasilitas lama yang tidak dicentang lagi, menjaga relasi yang tetap dicentang, dan menambahkan fasilitas baru yang baru saja dipilih.
-        $kamar->fasilitas()->sync($request->fasilitas ?? []); // Garis ?? [] adalah penanganan fallback. Jika admin mengosongkan semua centang fasilitas saat mengedit, nilai $request->fasilitas bernilai null. Mengirim array kosong [] ke sync() akan mencabut seluruh fasilitas kamar secara aman tanpa menyebabkan error PHP."
+        $kamar->fasilitas()->sync($request->fasilitas ?? []);
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Diperbarui!');
     }
@@ -114,14 +135,9 @@ class KamarController extends Controller
             Storage::disk('public')->delete($kamar->foto);
         }
 
-        $kamar->fasilitas()->detach(); // Hapus relasi pivot
+        $kamar->fasilitas()->detach();
         $kamar->delete();
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Dihapus!');
     }
-
-    public function reservasis()
-{
-    return $this->hasMany(Reservasi::class, 'kamar_id');
-}
 }

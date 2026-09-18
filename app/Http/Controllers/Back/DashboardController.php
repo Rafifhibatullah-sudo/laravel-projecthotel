@@ -7,38 +7,61 @@ use App\Models\Kamar;
 use App\Models\Fasilitas;
 use App\Models\Artikel;
 use App\Models\Reservasi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $today = date('Y-m-d');
+        $today = Carbon::today()->toDateString(); // Tanggal hari ini (YYYY-MM-DD)
 
-        // Data statistik utama
-        $totalKamar      = Kamar::count();
-        $totalFasilitas  = Fasilitas::count();~
-        $totalArtikel    = Artikel::count();
-        $totalReservasi  = Reservasi::count();
+        // 1. Data statistik utama
+        $totalKamar     = Kamar::count();
+        $totalFasilitas = Fasilitas::count();
+        $totalArtikel   = Artikel::count();
+        $totalReservasi = Reservasi::count();
 
-        // Status Reservasi
-        $pendingReservasi   = Reservasi::where('status', 'pending')->count();
-        $confirmedReservasi = Reservasi::where('status', 'confirmed')->count();
-        $cancelledReservasi = Reservasi::where('status', 'cancelled')->count();
+        // 2. Status Reservasi
+        $pendingReservasi   = Reservasi::whereIn('status', ['pending', 'Pending'])->count();
+        $confirmedReservasi = Reservasi::whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'out', 'Out'])->count();
+        $cancelledReservasi = Reservasi::whereIn('status', ['cancelled', 'canceled', 'Dibatalkan', 'Batal'])->count();
 
-        // Badge Check-In & Check-Out Berdasarkan Status & Tanggal
-        $checkInHariIni = Reservasi::whereDate('check_in', $today)
-            ->where('status', 'in')
+        // 3. Total Tamu Sedang Menginap (In-House Guests)
+        $checkInHariIni = Reservasi::whereDate('check_in', '<=', $today)
+            ->whereDate('check_out', '>=', $today)
+            ->whereIn('status', ['in', 'In', 'Check In', 'confirmed', 'Confirmed'])
             ->count();
 
+        // 4. Check-Out Hari Ini
         $checkOutHariIni = Reservasi::whereDate('check_out', $today)
-            ->where('status', 'out')
+            ->whereIn('status', ['in', 'In', 'out', 'Out', 'Check In', 'Check Out'])
             ->count();
-        // Tabel Reservasi Terbaru
+
+        // 5. Tabel Reservasi Terbaru
         $reservasiTerbaru = Reservasi::with('kamar')
             ->latest()
             ->take(5)
             ->get();
+
+        // ==========================================
+        // POIN 5 FIX: Hitung Sisa Stok Kamar Real-time
+        // ==========================================
+        $kamars = Kamar::all()->map(function ($kamar) use ($today) {
+            // Hitung kamar yang terpakai/terbooking untuk hari ini
+            $kamarTerpakai = Reservasi::where('kamar_id', $kamar->id)
+                ->whereDate('check_in', '<=', $today)
+                ->whereDate('check_out', '>', $today) // Masih menginap hari ini
+                ->whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'Check In'])
+                ->sum('jumlah_kamar');
+
+            // Hitung sisa stok (Stok awal - terpakai)
+            $sisaStok = $kamar->stok - $kamarTerpakai;
+            $kamar->sisa_stok = max(0, $sisaStok); // Tidak boleh minus
+            $kamar->stok_terpakai = $kamarTerpakai;
+
+            return $kamar;
+        });
 
         return view('back.dashboard.index', compact(
             'totalKamar',
@@ -50,7 +73,8 @@ class DashboardController extends Controller
             'cancelledReservasi',
             'checkInHariIni',
             'checkOutHariIni',
-            'reservasiTerbaru'
+            'reservasiTerbaru',
+            'kamars' // Data kamar dengan kalkulasi sisa stok otomatis
         ));
     }
 }

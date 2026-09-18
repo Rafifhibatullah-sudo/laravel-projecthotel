@@ -72,7 +72,7 @@
                     </tr>
                     <tr>
                         <td class="text-muted">Status Reservasi</td>
-                        <td>: <span class="fw-bold text-uppercase">{{ $reservasi->status }}</span></td>
+                        <td>: <span class="fw-bold text-uppercase">Confirmed</span></td>
                     </tr>
                 </table>
             </div>
