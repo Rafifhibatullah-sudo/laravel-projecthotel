@@ -189,14 +189,15 @@ class FrontController extends Controller
     {
         // 1. Validasi Input Data & File Bukti Pembayaran
         $request->validate([
-            'kamar_id'     => 'required|exists:kamars,id',
-            'nama_pemesan' => 'required|string|max:255',
-            'email'        => 'required|email',
-            'no_hp'        => 'required',
-            'check_in'     => 'required|date',
-            'check_out'    => 'required|date|after:check_in',
-            'jumlah_kamar' => 'required|numeric|min:1',
-            'bukti_bayar'  => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'kamar_id'          => 'required|exists:kamars,id',
+            'nama_pemesan'      => 'required|string|max:255',
+            'email'             => 'required|email',
+            'no_hp'             => 'required',
+            'check_in'          => 'required|date',
+            'check_out'         => 'required|date|after:check_in',
+            'jumlah_kamar'      => 'required|numeric|min:1',
+            'metode_pembayaran' => 'required|string', // <-- Validasi Ditambahkan
+            'bukti_bayar'       => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $kamar    = Kamar::findOrFail($request->kamar_id);
@@ -236,22 +237,25 @@ class FrontController extends Controller
 
         // 5. Simpan Data Reservasi ke Database
         Reservasi::create([
-            'kode_booking'     => $kodeBooking,
-            'kamar_id'         => $request->kamar_id,
-            'nama_pemesan'     => $request->nama_pemesan,
-            'email'            => $request->email,
-            'no_hp'            => $request->no_hp,
-            'check_in'         => $request->check_in,
-            'check_out'        => $request->check_out,
-            'jumlah_kamar'     => $request->jumlah_kamar,
-            'total_harga'      => $totalHarga,
-            'status'           => 'pending',
-            'catatan'          => $request->catatan,
-            'bukti_pembayaran' => $buktiBayarPath,
+            'kode_booking'      => $kodeBooking,
+            'kamar_id'          => $request->kamar_id,
+            'nama_pemesan'      => $request->nama_pemesan,
+            'email'             => $request->email,
+            'no_hp'             => $request->no_hp,
+            'check_in'          => $request->check_in,
+            'check_out'         => $request->check_out,
+            'jumlah_kamar'      => $request->jumlah_kamar,
+            'total_harga'       => $totalHarga,
+            'status'            => 'pending',
+            'catatan'           => $request->catatan,
+            'bukti_pembayaran'  => $buktiBayarPath,
+            'metode_pembayaran' => $request->metode_pembayaran, // <-- Disimpan ke Database
         ]);
 
         // 6. Format & Redirect ke WhatsApp Admin
         $nomorWAAdmin = '6282186993746';
+        $metodeText   = strtoupper($request->metode_pembayaran);
+
         $pesan = "Halo Admin Grand Horizon Hotel, saya telah melakukan booking online dan mengunggah bukti bayar:\n\n" .
             "*Kode Booking:* {$kodeBooking}\n" .
             "*Nama:* {$request->nama_pemesan}\n" .
@@ -259,6 +263,7 @@ class FrontController extends Controller
             "*Check In:* {$request->check_in}\n" .
             "*Check Out:* {$request->check_out}\n" .
             "*Jumlah Kamar:* {$request->jumlah_kamar} Unit\n" .
+            "*Metode Bayar:* {$metodeText}\n" . // <-- Ditampilkan di WA
             "*Total Harga:* Rp " . number_format($totalHarga, 0, ',', '.') . "\n\n" .
             "Mohon dicek bukti pembayarannya pada sistem admin. Terima kasih!";
 

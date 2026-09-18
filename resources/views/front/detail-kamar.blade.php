@@ -136,14 +136,14 @@
             <input type="number" name="jumlah_kamar" id="jumlah_kamar" class="form-control rounded-3" value="1" min="1" required>
           </div>
            
-         {{-- <div class="mb-3"> 
+         <div class="mb-3"> 
         <label class="form-label fw-semibold small" for="metode_pembayaran">Metode Pembayaran</label> 
         <select class="form-select" name="metode_pembayaran" id="metode_pembayaran">
           <option value="" hidden selected>--- Pilih ---</option> 
           <option value="e-wallet">E-Wallet</option> 
           <option value="bank">Bank</option> 
         </select> 
-      </div> --}}
+      </div>
 
           <!-- Input Upload Bukti Pembayaran -->
           <div class="mb-3">

@@ -61,7 +61,7 @@
         <!-- Dynamic Select2 Multi-Select Edit -->
         <div class="col-md-12 mb-3">
           <label class="form-label fw-semibold">Pilih Fasilitas Kamar</label>
-          <select name="fasilitas_id[]" class="form-select select2-multiple" multiple="multiple">
+          <select name="fasilitas[]" class="form-select select2-multiple" multiple="multiple">
             @foreach($fasilitas as $item)
               <option value="{{ $item->id }}" {{ $kamar->fasilitas->contains($item->id) ? 'selected' : '' }}>
                 {{ $item->nama_fasilitas }}

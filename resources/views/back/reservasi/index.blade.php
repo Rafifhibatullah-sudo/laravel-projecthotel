@@ -31,6 +31,7 @@
             <th>Tamu</th>
             <th>Kamar</th>
             <th>Check In / Out</th>
+            <th>Metode Bayar</th>
             <th>Total</th>
             <th>Status</th>
             <th width="12%" class="text-center">Aksi</th>
@@ -52,6 +53,11 @@
             <td>
               <small class="d-block text-success fw-semibold"><i class="fas fa-sign-in-alt me-1"></i>{{ \Carbon\Carbon::parse($row->check_in)->format('d M Y') }}</small>
               <small class="d-block text-danger fw-semibold"><i class="fas fa-sign-out-alt me-1"></i>{{ \Carbon\Carbon::parse($row->check_out)->format('d M Y') }}</small>
+            </td>
+            <td>
+              <span class="badge bg-info text-dark font-monospace">
+                {{ strtoupper($row->metode_pembayaran ?? '-') }}
+              </span>
             </td>
             <td class="fw-bold">Rp {{ number_format($row->total_harga ?? $row->total_bayar ?? 0, 0, ',', '.') }}</td>
             <td>
@@ -77,7 +83,7 @@
                   <!-- Option 1: Modal Rincian Reservasi -->
                   <li>
                     <button type="button" class="dropdown-item text-primary fw-medium" data-bs-toggle="modal" data-bs-target="#modalRincian{{ $row->id }}">
-                      <i class="fas fa-file-alt me-2"></i>Rincian Reservasi
+                      <i class="fas fa-file-alt me-2"></i>Informasi Reservasi
                     </button>
                   </li>
 
@@ -182,7 +188,7 @@
     <div class="modal-content border-0 shadow-lg rounded-4 text-start">
       <div class="modal-header bg-primary text-white py-3">
         <h5 class="modal-title fw-bold fs-6" id="modalRincianLabel{{ $row->id }}">
-          <i class="fas fa-file-alt me-2"></i>Rincian Reservasi - {{ $row->kode_booking }}
+          <i class="fas fa-file-alt me-2"></i>Informasi Reservasi - {{ $row->kode_booking }}
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -211,7 +217,7 @@
         
         <table class="table table-sm table-borderless small mb-0">
           <tr>
-            <td class="text-muted" style="width: 130px;">Nama Lengkap</td>
+            <td class="text-muted" style="width: 140px;">Nama Lengkap</td>
             <td>: <strong class="text-dark">{{ $row->nama_pemesan }}</strong></td>
           </tr>
           <tr>
@@ -239,7 +245,11 @@
             <td>: <span class="text-danger fw-bold"><i class="fas fa-calendar-times me-1"></i>{{ \Carbon\Carbon::parse($row->check_out)->format('d M Y') }}</span></td>
           </tr>
           <tr>
-            <td class="text-muted">Total Tagihan</td>
+            <td class="text-muted">Metode Pembayaran</td>
+            <td>: <span class="badge bg-info text-dark font-monospace">{{ strtoupper($row->metode_pembayaran ?? '-') }}</span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">Total Bayar</td>
             <td>: <strong class="text-success fs-6">Rp {{ number_format($row->total_harga ?? $row->total_bayar ?? 0, 0, ',', '.') }}</strong></td>
           </tr>
           <tr>
@@ -268,13 +278,11 @@
       </div>
       <div class="modal-body p-4 text-center">
         @php
-          // Cek beberapa variasi nama kolom database
           $pathBukti = $row->bukti_pembayaran ?? $row->bukti_bayar;
         @endphp
 
         @if(!empty($pathBukti))
           @php
-            // Memastikan path tidak tertumpuk 'bukti_bayar/bukti_bayar/...'
             $urlGambar = Str::startsWith($pathBukti, 'bukti_bayar/') 
               ? asset('storage/' . $pathBukti) 
               : asset('storage/bukti_bayar/' . $pathBukti);

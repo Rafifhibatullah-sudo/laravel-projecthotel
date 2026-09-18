@@ -43,17 +43,22 @@
 
         <div class="col-md-12 mb-3">
           <label class="form-label fw-semibold">Foto Kamar</label>
-          <input type="file" name="foto" class="form-control" accept="image/*">
+          <input type="file" name="foto" id="img" class="form-control" accept="image/*">
           <small class="text-muted">Format: JPG, PNG, WEBP. Maksimal 2MB.</small>
+          
+          <!-- Container Preview Foto -->
+          <div class="mt-2">
+            <img class="img-preview img-fluid rounded-3 style-preview" style="max-height: 150px; display: none;">
+          </div>
         </div>
 
         <!-- Dynamic Select2 Multi-Select -->
         <div class="col-md-12 mb-3">
           <label class="form-label fw-semibold">Pilih Fasilitas Kamar</label>
-          <select name="fasilitas_id[]" class="form-select select2-multiple" multiple="multiple">
+          <!-- PERBAIKAN: Atribut name disesuaikan menjadi fasilitas[] -->
+          <select name="fasilitas[]" class="form-select select2-multiple" multiple="multiple">
             @foreach($fasilitas as $item)
               <option value="{{ $item->id }}">{{ $item->nama_fasilitas }}</option>
-           
             @endforeach
           </select>
           <small class="text-muted">Ketik nama fasilitas untuk mencari dan pilih lebih dari satu.</small>
@@ -73,8 +78,6 @@
 
 @push('js')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<!-- DIPERBAIKI: Menggunakan js/select2.min.js (bukan css/select2.min.js) -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 
@@ -95,7 +98,9 @@
     clipboard_handleImages: false
   };
 
-  CKEDITOR.replace('myeditor', options);
+  if(document.getElementById('myeditor')){
+    CKEDITOR.replace('myeditor', options);
+  }
 
   $("#img").change(function() {
     previewImage(this);
@@ -105,7 +110,7 @@
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       reader.onload = function(e) {
-        $('.img-preview').attr('src', e.target.result);
+        $('.img-preview').attr('src', e.target.result).show();
       }
       reader.readAsDataURL(input.files[0]);
     }

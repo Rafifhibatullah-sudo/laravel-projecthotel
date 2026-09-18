@@ -22,6 +22,7 @@ return new class extends Migration
             // Menambahkan status 'in' dan 'out'
             $table->enum('status', ['pending', 'confirmed', 'in', 'out', 'cancelled'])->default('pending');
             $table->string('bukti_pembayaran')->nullable(); // Menampung file bukti transfer/bayar
+            $table->string('metode_pembayaran')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

@@ -22,6 +22,7 @@ class Reservasi extends Model
         'status',
         'catatan',
         'bukti_pembayaran',
+        'metode_pembayaran', // Ditambahkan
     ];
 
     /**

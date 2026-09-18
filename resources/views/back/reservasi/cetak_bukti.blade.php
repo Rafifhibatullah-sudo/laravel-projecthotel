@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukti Pembayaran - {{ $reservasi->kode_booking }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link href="{{ asset('back/css/pdf.css') }}" rel="stylesheet">
+    <link href="{{ asset('back/css/pdf.css') }}" rel="stylesheet">
 </head>
 <body>
 
@@ -16,7 +16,6 @@
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom no-print">
             <a href="{{ route('reservasi.index') }}" class="btn btn-secondary"> Kembali ke Daftar Reservasi</a>
             
-            <!-- Fungsi JavaScript Otomatis Membuka Dialog Print Browser -->
             <button onclick="cetakPDF()" class="btn btn-primary">
                  Cetak / Download PDF
             </button>
@@ -46,7 +45,7 @@
                 <h6 class="fw-bold text-dark">Informasi Tamu:</h6>
                 <table class="table table-borderless table-sm small">
                     <tr>
-                        <td width="35%" class="text-muted">Nama Pemesan</td>
+                        <td width="40%" class="text-muted">Nama Pemesan</td>
                         <td>: <strong>{{ $reservasi->nama_pemesan }}</strong></td>
                     </tr>
                     <tr>
@@ -60,10 +59,10 @@
                 </table>
             </div>
             <div class="col-6">
-                <h6 class="fw-bold text-dark">Rincian Penginapan:</h6>
+                <h6 class="fw-bold text-dark">Rincian Penginapan & Pembayaran:</h6>
                 <table class="table table-borderless table-sm small">
                     <tr>
-                        <td width="35%" class="text-muted">Check-In</td>
+                        <td width="45%" class="text-muted">Check-In</td>
                         <td>: <strong>{{ \Carbon\Carbon::parse($reservasi->check_in)->format('d M Y') }}</strong></td>
                     </tr>
                     <tr>
@@ -71,8 +70,12 @@
                         <td>: <strong>{{ \Carbon\Carbon::parse($reservasi->check_out)->format('d M Y') }}</strong></td>
                     </tr>
                     <tr>
+                        <td class="text-muted">Metode Pembayaran</td>
+                        <td>: <strong class="text-uppercase">{{ $reservasi->metode_pembayaran ?? '-' }}</strong></td>
+                    </tr>
+                    <tr>
                         <td class="text-muted">Status Reservasi</td>
-                        <td>: <span class="fw-bold text-uppercase">Confirmed</span></td>
+                        <td>: <span class="fw-bold text-uppercase">CONFIRMED</span></td>
                     </tr>
                 </table>
             </div>
@@ -100,7 +103,7 @@
                             @php
                                 $cIn  = \Carbon\Carbon::parse($reservasi->check_in);
                                 $cOut = \Carbon\Carbon::parse($reservasi->check_out);
-                                $malam = $cIn->diffInDays($cOut);
+                                $malam = $cIn->diffInDays($cOut) ?: 1;
                             @endphp
                             {{ $malam }} Malam
                         </td>

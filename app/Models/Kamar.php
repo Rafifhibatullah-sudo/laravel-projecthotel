@@ -10,6 +10,8 @@ class Kamar extends Model
 {
     use HasFactory;
 
+    protected $table = 'kamars'; // Menegaskan nama tabel di database
+
     protected $fillable = [
         'nama_kamar',
         'slug',
@@ -20,7 +22,9 @@ class Kamar extends Model
         'foto',
     ];
 
-    // Otomatis generate slug saat menyimpan jika belum diisi
+    /**
+     * Boot function untuk generate slug otomatis
+     */
     protected static function boot()
     {
         parent::boot();
@@ -32,12 +36,17 @@ class Kamar extends Model
         });
     }
 
-    // UBAH BAGIAN INI: Parameter kedua diganti ke 'kamar_fasilitas'
+    /**
+     * Relasi Many-to-Many ke Model Fasilitas melalui tabel pivot 'kamar_fasilitas'
+     */
     public function fasilitas()
     {
         return $this->belongsToMany(Fasilitas::class, 'kamar_fasilitas', 'kamar_id', 'fasilitas_id');
     }
-    
+
+    /**
+     * Menggunakan 'slug' sebagai pengganti ID pada Route Model Binding
+     */
     public function getRouteKeyName()
     {
         return 'slug';

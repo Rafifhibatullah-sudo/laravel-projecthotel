@@ -12,26 +12,24 @@ use Illuminate\Support\Facades\Storage;
 
 class KamarController extends Controller
 {
-
+    /**
+     * Tampilkan daftar kamar beserta sisa stok
+     */
     public function index()
     {
         $today = Carbon::today()->toDateString();
 
-        // Mengambil semua kamar beserta kalkulasi sisa stok real-time
-        $kamars = Kamar::latest()->get()->map(function ($kamar) use ($today) {
-            // Hitung kamar yang terpakai/terbooking untuk hari ini
+        $kamars = Kamar::with('fasilitas')->latest()->get()->map(function ($kamar) use ($today) {
             $kamarTerpakai = Reservasi::where('kamar_id', $kamar->id)
                 ->whereDate('check_in', '<=', $today)
                 ->whereDate('check_out', '>', $today)
                 ->whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'Check In'])
                 ->sum('jumlah_kamar');
 
-            // Total stok awal dari database
             $totalStok = $kamar->jumlah_kamar ?? $kamar->stok ?? 0;
 
-            // Hitung sisa stok real-time
             $kamar->sisa_stok = max(0, $totalStok - $kamarTerpakai);
-            $kamar->terpakai = $kamarTerpakai;
+            $kamar->terpakai  = $kamarTerpakai;
 
             return $kamar;
         });
@@ -39,22 +37,28 @@ class KamarController extends Controller
         return view('back.kamar.index', compact('kamars'));
     }
 
+    /**
+     * Form tambah kamar
+     */
     public function create()
     {
         $fasilitas = Fasilitas::all();
         return view('back.kamar.create', compact('fasilitas'));
     }
 
+    /**
+     * Simpan data kamar baru
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kamar'   => 'required',
-            'tipe_kamar'   => 'required',
+            'nama_kamar'   => 'required|string|max:255',
+            'tipe_kamar'   => 'required|string|max:255',
             'harga'        => 'required|numeric',
             'jumlah_kamar' => 'required|numeric',
             'deskripsi'    => 'nullable',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'fasilitas_id' => 'nullable|array',
+            'fasilitas'    => 'nullable|array', // Disamakan menjadi 'fasilitas'
         ]);
 
         $fotoPath = null;
@@ -71,38 +75,60 @@ class KamarController extends Controller
             'foto'         => $fotoPath,
         ]);
 
-        if ($request->has('fasilitas_id')) {
-            $kamar->fasilitas()->attach($request->fasilitas_id);
+        // Menggunakan sync agar data di tabel pivot kamar_fasilitas tersimpan aman
+        if ($request->has('fasilitas')) {
+            $kamar->fasilitas()->sync($request->fasilitas);
         }
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Ditambahkan!');
     }
 
+    /**
+     * Tampilkan detail kamar
+     */
     public function show($id)
     {
-        $kamar = Kamar::with('fasilitas')->findOrFail($id);
+        // Mendukung pencarian lewat ID maupun Slug
+        $kamar = Kamar::with('fasilitas')
+            ->where('id', $id)
+            ->orWhere('slug', $id)
+            ->firstOrFail();
+
         return view('back.kamar.show', compact('kamar'));
     }
 
+    /**
+     * Form edit kamar
+     */
     public function edit($id)
     {
-        $kamar = Kamar::with('fasilitas')->findOrFail($id);
+        $kamar = Kamar::with('fasilitas')
+            ->where('id', $id)
+            ->orWhere('slug', $id)
+            ->firstOrFail();
+
         $fasilitas = Fasilitas::all();
+
         return view('back.kamar.edit', compact('kamar', 'fasilitas'));
     }
 
+    /**
+     * Update data kamar
+     */
     public function update(Request $request, $id)
     {
-        $kamar = Kamar::findOrFail($id);
+        $kamar = Kamar::where('id', $id)
+            ->orWhere('slug', $id)
+            ->firstOrFail();
 
         $request->validate([
-            'nama_kamar'   => 'required',
-            'tipe_kamar'   => 'required',
+            'nama_kamar'   => 'required|string|max:255',
+            'tipe_kamar'   => 'required|string|max:255',
             'harga'        => 'required|numeric',
             'jumlah_kamar' => 'required|numeric',
             'deskripsi'    => 'nullable',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'fasilitas'    => 'array',
+            'fasilitas'    => 'nullable|array',
         ]);
 
         $fotoPath = $kamar->foto;
@@ -122,14 +148,20 @@ class KamarController extends Controller
             'foto'         => $fotoPath,
         ]);
 
+        // Sinkronisasi data fasilitas (otomatis hapus yang tidak dicentang & tambah yang baru)
         $kamar->fasilitas()->sync($request->fasilitas ?? []);
 
         return redirect()->route('kamar.index')->with('success', 'Data Kamar Berhasil Diperbarui!');
     }
 
+    /**
+     * Hapus kamar
+     */
     public function destroy($id)
     {
-        $kamar = Kamar::findOrFail($id);
+        $kamar = Kamar::where('id', $id)
+            ->orWhere('slug', $id)
+            ->firstOrFail();
 
         if ($kamar->foto && Storage::disk('public')->exists($kamar->foto)) {
             Storage::disk('public')->delete($kamar->foto);
