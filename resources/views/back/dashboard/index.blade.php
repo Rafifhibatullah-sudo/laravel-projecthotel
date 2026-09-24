@@ -151,6 +151,46 @@
     </div>
   </div>
 
+
+  <!-- Kartu Ringkasan Pendapatan -->
+<div class="row g-3 mb-4" data-aos="fade-up">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 bg-primary text-white p-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white-50 fw-semibold">Pendapatan Hari Ini</span>
+                    <i class="fas fa-wallet fs-4 text-white-50"></i>
+                </div>
+                <h3 class="fw-bold mb-0">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 bg-success text-white p-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white-50 fw-semibold">Pendapatan Bulan Ini</span>
+                    <i class="fas fa-calendar-alt fs-4 text-white-50"></i>
+                </div>
+                <h3 class="fw-bold mb-0">Rp {{ number_format($pendapatanBulanIni, 0, ',', '.') }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark text-white p-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white-50 fw-semibold">Total Pendapatan Keseluruhan</span>
+                    <i class="fas fa-chart-line fs-4 text-white-50"></i>
+                </div>
+                <h3 class="fw-bold mb-0">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <!-- Tabel Tamu / Pemesanan Kamar Terbaru -->

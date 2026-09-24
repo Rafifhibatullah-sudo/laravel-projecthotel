@@ -263,7 +263,7 @@ class FrontController extends Controller
             "*Check In:* {$request->check_in}\n" .
             "*Check Out:* {$request->check_out}\n" .
             "*Jumlah Kamar:* {$request->jumlah_kamar} Unit\n" .
-            "*Metode Bayar:* {$metodeText}\n" . // <-- Ditampilkan di WA
+            "*Metode Bayar:* {$metodeText}\n" . 
             "*Total Harga:* Rp " . number_format($totalHarga, 0, ',', '.') . "\n\n" .
             "Mohon dicek bukti pembayarannya pada sistem admin. Terima kasih!";
 

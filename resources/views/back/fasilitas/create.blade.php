@@ -9,18 +9,46 @@
   <a href="{{ route('fasilitas.index') }}" class="btn btn-outline-secondary rounded-3">Kembali</a>
 </div>
 
+{{-- Alert Bootstrap Notification --}}
+@if(session('success'))
+  <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+@endif
+
+@if(session('error'))
+  <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+@endif
+
+@if($errors->any())
+  <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i><strong>Terjadi Kesalahan!</strong> Mohon periksa kembali inputan Anda.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+@endif
+
 <div class="card border-0 shadow-sm rounded-4 mb-4" data-aos="fade-up">
   <div class="card-body p-4">
-    <form action="{{ route('fasilitas.store') }}" method="POST">
+    <form id="formFasilitas" action="{{ route('fasilitas.store') }}" method="POST">
       @csrf
       <div class="mb-3">
         <label class="form-label fw-semibold">Nama Fasilitas</label>
-        <input type="text" name="nama_fasilitas" class="form-control" placeholder="Contoh: Kolam Renang Outdoor" required>
+        <input type="text" name="nama_fasilitas" class="form-control @error('nama_fasilitas') is-invalid @enderror" value="{{ old('nama_fasilitas') }}" placeholder="Contoh: Kolam Renang Outdoor" required>
+        @error('nama_fasilitas')
+          <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
       </div>
 
       <div class="mb-3">
         <label class="form-label fw-semibold">Deskripsi</label>
-        <textarea name="deskripsi" id="myeditor" class="form-control" rows="4" placeholder="Penjelasan singkat mengenai fasilitas..."></textarea>
+        <textarea name="deskripsi" id="myeditor" class="form-control @error('deskripsi') is-invalid @enderror" rows="4" placeholder="Penjelasan singkat mengenai fasilitas...">{{ old('deskripsi') }}</textarea>
+        @error('deskripsi')
+          <div class="text-danger small mt-1">{{ $message }}</div>
+        @enderror
       </div>
 
       <button type="submit" class="btn btn-primary rounded-3 px-4">Simpan Fasilitas</button>
@@ -42,20 +70,20 @@
     clipboard_handleImages: false
   };
 
-  CKEDITOR.replace('myeditor', options);
-
-  $("#img").change(function() {
-    previewImage(this);
-  });
-
-  function previewImage(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        $('.img-preview').attr('src', e.target.result);
-      }
-      reader.readAsDataURL(input.files[0]);
-    }
+  if (document.getElementById('myeditor')) {
+    CKEDITOR.replace('myeditor', options);
   }
+
+  // Konfirmasi submit menggunakan confirm() bawaan browser
+  $('#formFasilitas').on('submit', function(e) {
+    if (CKEDITOR.instances.myeditor) {
+      CKEDITOR.instances.myeditor.updateElement();
+    }
+
+    var yakin = confirm("Apakah Anda yakin ingin menyimpan fasilitas ini?");
+    if (!yakin) {
+      e.preventDefault();
+    }
+  });
 </script>
 @endpush

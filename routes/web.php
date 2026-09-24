@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
 
     // B. Operasional Hotel (Akses: Admin & Frontline)
     Route::middleware(['role:admin,frontline'])->group(function () {
-        // PERHATIAN: Route statis (/export) ditaruh SEBELUM route dinamis (/{id})
+        // Route Export Excel menggunakan ReservasiController
         Route::get('/reservasi/export', [ReservasiController::class, 'exportExcel'])->name('reservasi.export');
         
         Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');

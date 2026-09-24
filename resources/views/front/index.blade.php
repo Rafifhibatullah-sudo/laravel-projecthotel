@@ -202,7 +202,7 @@
               </div>
             @endif
           </a>
-          
+
           <div class="card-body p-4">
             <span class="badge bg-info-subtle text-info border border-info-subtle mb-2 px-3 py-1 rounded-pill">{{ $artikel->kategori }}</span>
             <h5 class="fw-bold text-dark mb-2">

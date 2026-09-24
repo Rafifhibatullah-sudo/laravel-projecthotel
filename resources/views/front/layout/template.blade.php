@@ -34,38 +34,7 @@
           <li class="nav-item"><a class="nav-link fw-semibold px-3" href="{{ route('front.kamar') }}">Kamar</a></li>
           <li class="nav-item"><a class="nav-link fw-semibold px-3" href="{{ route('front.fasilitas') }}">Fasilitas</a></li>
           <li class="nav-item"><a class="nav-link fw-semibold px-3" href="{{ route('front.artikel') }}">Artikel & Promo</a></li>
-
-          {{-- <!-- LOGIKA PENGECEKAN USER LOGIN (Poin 6: Tombol Login untuk Guest telah Dihapus) -->
-          @auth
-            <li class="nav-item dropdown ms-lg-2">
-              <a class="nav-link dropdown-toggle fw-bold text-dark bg-light px-3 py-2 rounded-pill border" href="#" role="button" data-bs-toggle="dropdown">
-                <i class="fas fa-user-circle text-primary me-1 fs-5 align-middle"></i> {{ auth()->user()->name }}
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2">
-                <li class="px-3 py-1 small text-muted">Role: <strong>{{ ucfirst(auth()->user()->role) }}</strong></li>
-                <li><hr class="dropdown-divider"></li>
-
-                @if(auth()->user()->role == 'admin')
-                  <li>
-                    <a class="dropdown-item fw-semibold text-primary" href="{{ route('dashboard') }}">
-                      <i class="fas fa-tachometer-alt me-2"></i> Ke Dashboard Admin
-                    </a>
-                  </li>
-                  <li><hr class="dropdown-divider"></li>
-                @endif
-
-                <li>
-                  <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="dropdown-item text-danger fw-semibold" onclick="return confirm('Yakin ingin keluar?');">
-                      <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </button>
-                  </form>
-                </li>
-              </ul>
-            </li>
-          @endauth --}}
-
+          
         </ul>
       </div>
     </div>
@@ -94,10 +63,10 @@
           </div>
         </div>
 
-        <!-- Kolom Embedded Maps -->
+        <!-- Kolom Maps -->
         <div class="col-lg-7">
           <div class="rounded-4 overflow-hidden shadow-sm border border-2 border-light" style="height: 230px;">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.514158659106!2d104.74457787383801!3d-2.9547284397235676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b742b746b209b%3A0x29e8c12afb478592!2sAston%20Palembang%20Hotel%20%26%20Conference%20Center!5e0!3m2!1sid!2sid!4v1787304084104!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.4309280658936!2d104.7438990738382!3d-2.9778255398122835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b75e0cafeb8ef%3A0x1fa0a148089dd2c9!2sThe%20Arista%20Hotel%20Palembang!5e0!3m2!1sid!2sid!4v1789705549988!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
         </div>
 
@@ -131,7 +100,7 @@
           <p class="small mb-2"><i class="fas fa-building me-2 text-primary"></i> 500 cabang hotel Grand Horizon Indonesia</p>
           <p class="small mb-2"><i class="fas fa-phone me-2 text-primary"></i>+6282186993746</p>
           <p class="small mb-2"><i class="fas fa-crown me-2 text-primary"></i>CEO + Owner - <a href="https://www.instagram.com/rafifhibatullah._" target="_blank" class="text-decoration-none text-white-50 underline italic"><i><u>rafifhibatullah._</u></i></a></p>
-          <p class="small mb-2"><i class="fas fa-users me-2 text-primary"></i>Co founder from arabic team - Ahmad Habibi </p>
+          <p class="small mb-2"><i class="fas fa-users me-2 text-primary"></i>Co founder from arabic team</p>
         </div>
       </div>
       <hr class="my-4 border-secondary opacity-25">
