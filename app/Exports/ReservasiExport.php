@@ -6,9 +6,12 @@ use App\Models\Reservasi;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Carbon\Carbon;
 
-class ReservasiExport implements FromCollection, WithHeadings, WithMapping
+class ReservasiExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     protected $bulan;
     protected $tahun;
@@ -29,40 +32,56 @@ class ReservasiExport implements FromCollection, WithHeadings, WithMapping
         $query = Reservasi::with('kamar')
             ->whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'Check In', 'out', 'Out', 'Check Out', 'paid', 'Paid']);
 
-        // Jika ada filter bulan
+        // Filter Berdasarkan Bulan jika ada
         if ($this->bulan) {
             $query->whereMonth('check_in', $this->bulan);
         }
 
-        // Jika ada filter tahun
+        // Filter Berdasarkan Tahun jika ada
         if ($this->tahun) {
             $query->whereYear('check_in', $this->tahun);
         }
 
         $data = $query->latest()->get();
 
-        // Hitung total nilai transaksi untuk baris paling bawah
+        // Hitung total nilai transaksi
         $this->totalKeseluruhan = $data->sum(function ($item) {
             return $item->total_harga ?? $item->total_bayar ?? $item->total ?? 0;
         });
 
-        // Sisipkan 2 baris tambahan di akhir collection: 1 baris kosong & 1 baris Total Pendapatan
-        $data->push((object)[
-            'is_summary' => true,
-            'label' => '',
-            'value' => ''
+        // Tentukan teks keterangan periode laporan
+        $namaBulan = $this->bulan ? Carbon::create()->month((int)$this->bulan)->translatedFormat('F') : 'Semua Bulan';
+        $teksTahun = $this->tahun ? $this->tahun : 'Semua Tahun';
+        $periodeLaporan = "PERIODE: " . strtoupper($namaBulan) . " " . $teksTahun;
+
+        $collection = collect();
+
+        // Header Keterangan Laporan di Baris Excel Paling Atas
+        $collection->push((object)[
+            'is_header' => true,
+            'col1' => 'LAPORAN TRANSAKSI RESERVASI HOTEL',
+            'col2' => $periodeLaporan
         ]);
 
-        $data->push((object)[
+        $collection->push((object)['is_blank' => true]);
+
+        // Masukkan data transaksi
+        foreach ($data as $item) {
+            $collection->push($item);
+        }
+
+        // Summary Total Pendapatan
+        $collection->push((object)['is_blank' => true]);
+        $collection->push((object)[
             'is_summary' => true,
             'label' => 'TOTAL PENDAPATAN',
             'value' => $this->totalKeseluruhan
         ]);
 
-        return $data;
+        return $collection;
     }
 
-    // Menentukan Nama Header Kolom Excel
+    // Menentukan Header Kolom Excel
     public function headings(): array
     {
         return [
@@ -71,8 +90,9 @@ class ReservasiExport implements FromCollection, WithHeadings, WithMapping
             'Email',
             'No HP / WA',
             'Nama Kamar',
-            'Check In',
-            'Check Out',
+            'Check In (WIB)',
+            'Check Out Rencana (WIB)',
+            'Check Out Real (WIB)',
             'Jumlah Kamar',
             'Total Harga',
             'Status',
@@ -83,34 +103,41 @@ class ReservasiExport implements FromCollection, WithHeadings, WithMapping
     // Memetakan Isi Data per Baris Excel
     public function map($reservasi): array
     {
-        // Jika data yang di-loop adalah baris ringkasan (Total Pendapatan)
-        if (isset($reservasi->is_summary) && $reservasi->is_summary) {
-            if ($reservasi->label === 'TOTAL PENDAPATAN') {
-                return [
-                    'TOTAL PENDAPATAN', // Kolom Kode Booking
-                    '',                 // Nama Pemesan
-                    '',                 // Email
-                    '',                 // No HP
-                    '',                 // Nama Kamar
-                    '',                 // Check In
-                    '',                 // Check Out
-                    '',                 // Jumlah Kamar
-                    'Rp ' . number_format($reservasi->value, 0, ',', '.'), // Total Harga
-                    '',                 // Status
-                    '',                 // Tanggal Booking
-                ];
-            }
-
-            // Baris Pembatas Kosong
-            return ['', '', '', '', '', '', '', '', '', '', ''];
+        // Header Judul Laporan
+        if (isset($reservasi->is_header) && $reservasi->is_header) {
+            return [
+                $reservasi->col1,
+                $reservasi->col2,
+                '', '', '', '', '', '', '', '', '', ''
+            ];
         }
 
-        // Ambil nominal harga
+        // Baris Kosong Pemisah
+        if (isset($reservasi->is_blank) && $reservasi->is_blank) {
+            return ['', '', '', '', '', '', '', '', '', '', '', ''];
+        }
+
+        // Baris Total Pendapatan
+        if (isset($reservasi->is_summary) && $reservasi->is_summary) {
+            return [
+                'TOTAL PENDAPATAN',
+                '', '', '', '', '', '', '', '',
+                'Rp ' . number_format($reservasi->value, 0, ',', '.'),
+                '', ''
+            ];
+        }
+
+        // Nominal Harga
         $harga = $reservasi->total_harga ?? $reservasi->total_bayar ?? $reservasi->total ?? 0;
 
-        // Format tanggal Check-In & Check-Out agar aman dari error Object Carbon
-        $checkIn = $reservasi->check_in ? Carbon::parse($reservasi->check_in)->format('d-m-Y') : '-';
-        $checkOut = $reservasi->check_out ? Carbon::parse($reservasi->check_out)->format('d-m-Y') : '-';
+        // Format Waktu Indonesia (WIB)
+        $checkIn = $reservasi->check_in ? Carbon::parse($reservasi->check_in)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') . ' WIB' : '-';
+        $checkOut = $reservasi->check_out ? Carbon::parse($reservasi->check_out)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') . ' WIB' : '-';
+        
+        // Checkout Real
+        $checkoutReal = isset($reservasi->checkout_real) && $reservasi->checkout_real 
+            ? Carbon::parse($reservasi->checkout_real)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') . ' WIB' 
+            : '-';
 
         return [
             $reservasi->kode_booking ?? '-',
@@ -120,10 +147,22 @@ class ReservasiExport implements FromCollection, WithHeadings, WithMapping
             $reservasi->kamar ? $reservasi->kamar->nama_kamar : 'Kamar Dihapus',
             $checkIn,
             $checkOut,
+            $checkoutReal,
             ($reservasi->jumlah_kamar ?? 1) . ' Unit',
             'Rp ' . number_format($harga, 0, ',', '.'),
             strtoupper($reservasi->status ?? '-'),
-            $reservasi->created_at ? Carbon::parse($reservasi->created_at)->format('d-m-Y H:i') : '-',
+            $reservasi->created_at ? Carbon::parse($reservasi->created_at)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') : '-',
+        ];
+    }
+
+    // Styling Tampilan Baris Excel
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            // Tebalkan Header Utama
+            1 => ['font' => ['bold' => true, 'size' => 12]],
+            // Tebalkan Header Tabel
+            3 => ['font' => ['bold' => true]],
         ];
     }
 }

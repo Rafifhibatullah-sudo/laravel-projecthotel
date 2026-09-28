@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
 
     // B. Operasional Hotel (Akses: Admin & Frontline)
     Route::middleware(['role:admin,frontline'])->group(function () {
-        // Route Export Excel menggunakan ReservasiController
+        // Route Export Excel (Wajib di atas route berparameter {id})
         Route::get('/reservasi/export', [ReservasiController::class, 'exportExcel'])->name('reservasi.export');
         
         Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('users', UserController::class);
     });
-    
+
 });
 
 // Laravel Filemanager Route

@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <!-- Informasi Rekening Pembayaran (Tampilan Rapi & Modern) -->
+          <!-- Informasi Rekening Pembayaran -->
           <div class="card bg-light border-0 rounded-3 p-3 my-3">
             <div class="d-flex align-items-center mb-2">
               <i class="fas fa-university text-primary fs-5 me-2"></i>
@@ -66,16 +66,26 @@
 
           <h5 class="fw-bold text-dark mb-3"><i class="fas fa-concierge-bell text-primary me-2"></i>Fasilitas Kamar Ini</h5>
           <div class="row g-3">
-            @forelse($kamar->fasilitas as $fas)
-            <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-              <div class="d-flex align-items-center p-3 rounded-3 bg-light">
-                <i class="fas fa-check-circle text-success me-3 fs-5"></i>
-                <span class="fw-medium text-dark">{{ $fas->nama_fasilitas }}</span>
-              </div>
-            </div>
-            @empty
-            <div class="col-12 text-muted small">Fasilitas kamar ini disertakan standar hotel.</div>
-            @endforelse
+            @php
+              $listFasilitas =$kamar->fasilitas ?? [];
+            @endphp
+
+            @if(count($listFasilitas) > 0)
+              @php
+                foreach($listFasilitas as$fas) {
+              @endphp
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                  <div class="d-flex align-items-center p-3 rounded-3 bg-light">
+                    <i class="fas fa-check-circle text-success me-3 fs-5"></i>
+                    <span class="fw-medium text-dark">{{ $fas->nama_fasilitas }}</span>
+                  </div>
+                </div>
+              @php
+                }
+              @endphp
+            @else
+              <div class="col-12 text-muted small">Fasilitas kamar ini disertakan standar hotel.</div>
+            @endif
           </div>
         </div>
       </div>
@@ -85,7 +95,7 @@
     <div class="col-lg-5" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
       <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px;">
         <h4 class="fw-bold text-dark mb-1"><i class="fas fa-calendar-alt text-primary me-2"></i>Form Booking Online</h4>
-        <p class="text-muted small mb-3">Pilih tanggal check-in dan check-out untuk melihat ketersediaan stok.</p>
+        <p class="text-muted small mb-3">Pilih tanggal & jam check-in/out untuk melihat ketersediaan stok.</p>
 
         <!-- Kotak Info Status Stok -->
         <div id="box-stok-info" class="alert alert-info d-flex align-items-center mb-3 rounded-3 py-2 px-3">
@@ -120,46 +130,28 @@
             </div>
           </div>
 
+          <!-- Section Input Tanggal & Jam Check-In -->
           <div class="row g-2 mb-3">
-            <div class="col-6">
+            <div class="col-7">
               <label class="form-label fw-semibold small">Tanggal Check In</label>
               <input type="date" name="check_in" id="check_in" class="form-control rounded-3" value="{{ request('check_in') }}" required min="{{ date('Y-m-d') }}">
             </div>
-            <div class="col-6">
-              <label class="form-label fw-semibold small">Tanggal Check Out</label>
-              <input type="date" name="check_out" id="check_out" class="form-control rounded-3" value="{{ request('check_out') }}" required min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+            <div class="col-5">
+              <label class="form-label fw-semibold small">Jam Check In</label>
+              <input type="time" name="jam_check_in" id="jam_check_in" class="form-control rounded-3" value="00:00" required>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold small">Jumlah Kamar</label>
-            <input type="number" name="jumlah_kamar" id="jumlah_kamar" class="form-control rounded-3" value="1" min="1" required>
-          </div>
-           
-         <div class="mb-3"> 
-        <label class="form-label fw-semibold small" for="metode_pembayaran">Metode Pembayaran</label> 
-        <select class="form-select" name="metode_pembayaran" id="metode_pembayaran">
-          <option value="" hidden selected>--- Pilih ---</option> 
-          <option value="e-wallet">E-Wallet</option> 
-          <option value="bank">Bank</option> 
-        </select> 
-      </div>
-
-          <!-- Input Upload Bukti Pembayaran -->
-          <div class="mb-3">
-            <label class="form-label fw-semibold small text-dark">
-              Upload Bukti Transfer / Pembayaran <span class="text-danger">*</span>
-            </label>
-            <input type="file" name="bukti_bayar" id="bukti_bayar" class="form-control rounded-3 @error('bukti_bayar') is-invalid @enderror" accept="image/jpeg,image/png,image/jpg" required>
-            <small class="text-muted d-block mt-1">Format: JPG, JPEG, PNG (Maksimal 2MB)</small>
-            @error('bukti_bayar')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold small">Catatan Tambahan (Opsional)</label>
-            <textarea name="catatan" class="form-control rounded-3" rows="2" placeholder="Contoh: Minta kamar bebas asap rokok..."></textarea>
+          <!-- Section Input Tanggal & Jam Check-Out -->
+          <div class="row g-2 mb-3">
+            <div class="col-7">
+              <label class="form-label fw-semibold small">Tanggal Check Out</label>
+              <input type="date" name="check_out" id="check_out" class="form-control rounded-3" value="{{ request('check_out') }}" required min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+            </div>
+            <div class="col-5">
+              <label class="form-label fw-semibold small">Jam Check Out</label>
+              <input type="time" name="jam_check_out" id="jam_check_out" class="form-control rounded-3" value="00:00" required>
+            </div>
           </div>
 
           <!-- Rincian Biaya Otomatis Real-time -->
@@ -178,6 +170,37 @@
               <span>Total Biaya:</span>
               <span id="text-total-harga" class="text-success fs-6">Rp 0</span>
             </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Jumlah Kamar</label>
+            <input type="number" name="jumlah_kamar" id="jumlah_kamar" class="form-control rounded-3" value="1" min="1" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small" for="metode_pembayaran">Metode Pembayaran</label>
+            <select class="form-select" name="metode_pembayaran" id="metode_pembayaran" required>
+              <option value="" hidden selected>--- Pilih ---</option>
+              <option value="e-wallet">E-Wallet</option>
+              <option value="bank">Bank</option>
+            </select>
+          </div>
+
+          <!-- Input Upload Bukti Pembayaran -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold small text-dark">
+              Upload Bukti Transfer / Pembayaran <span class="text-danger">*</span>
+            </label>
+            <input type="file" name="bukti_bayar" id="bukti_bayar" class="form-control rounded-3 @error('bukti_bayar') is-invalid @enderror" accept="image/jpeg,image/png,image/jpg" required>
+            <small class="text-muted d-block mt-1">Format: JPG, JPEG, PNG (Maksimal 2MB)</small>
+            @error('bukti_bayar')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Catatan Tambahan (Opsional)</label>
+            <textarea name="catatan" class="form-control rounded-3" rows="2" placeholder="Contoh: Minta kamar bebas asap rokok..."></textarea>
           </div>
 
           <button type="submit" id="btn-submit-booking" class="btn btn-primary btn-lg w-100 rounded-3 fw-bold shadow-sm">

@@ -21,7 +21,7 @@ class FrontController extends Controller
         $today    = Carbon::today()->toDateString();
         $tomorrow = Carbon::tomorrow()->toDateString();
 
-        // OPSI 1: Update status reservasi otomatis menjadi 'out' jika tanggal check_out <= hari ini
+        // Update status reservasi otomatis menjadi 'out' jika tanggal check_out <= hari ini
         Reservasi::whereDate('check_out', '<=', $today)
             ->whereIn('status', ['in', 'In', 'Check In', 'confirmed', 'Confirmed'])
             ->update(['status' => 'out']);
@@ -194,22 +194,22 @@ class FrontController extends Controller
             'email'             => 'required|email',
             'no_hp'             => 'required',
             'check_in'          => 'required|date',
+            'jam_check_in'      => 'required',
             'check_out'         => 'required|date|after:check_in',
+            'jam_check_out'     => 'required',
             'jumlah_kamar'      => 'required|numeric|min:1',
-            'metode_pembayaran' => 'required|string', // <-- Validasi Ditambahkan
+            'metode_pembayaran' => 'required|string',
             'bukti_bayar'       => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $kamar    = Kamar::findOrFail($request->kamar_id);
-        $checkIn  = $request->check_in;
-        $checkOut = $request->check_out;
+        $kamar = Kamar::findOrFail($request->kamar_id);
 
-        // 2. Validasi Ketersediaan Stok
+        // 2. Validasi Ketersediaan Stok Berdasarkan Tanggal
         $bookedCount = Reservasi::where('kamar_id', $kamar->id)
             ->whereIn('status', ['pending', 'confirmed', 'in', 'Pending', 'Confirmed', 'Check In'])
-            ->where(function ($query) use ($checkIn, $checkOut) {
-                $query->where('check_in', '<', $checkOut)
-                      ->where('check_out', '>', $checkIn);
+            ->where(function ($query) use ($request) {
+                $query->where('check_in', '<', $request->check_out)
+                      ->where('check_out', '>', $request->check_in);
             })->sum('jumlah_kamar');
 
         $sisaStok = $kamar->jumlah_kamar - $bookedCount;
@@ -218,12 +218,13 @@ class FrontController extends Controller
             return redirect()->back()->with('error', 'Maaf, stok kamar tidak mencukupi untuk tanggal yang dipilih. Sisa stok: ' . $sisaStok);
         }
 
-        // 3. Hitung Durasi dan Total Harga
-        $date1  = new \DateTime($checkIn);
-        $date2  = new \DateTime($checkOut);
-        $durasi = $date1->diff($date2)->days;
+        // 3. Hitung Durasi (Hari) dan Total Harga
+        $checkInDate  = Carbon::parse($request->check_in);
+        $checkOutDate = Carbon::parse($request->check_out);
+        $durasi       = $checkInDate->diffInDays($checkOutDate);
+
         if ($durasi == 0) {
-            $durasi = 1;
+            $durasi = 1; // Minimal hitung 1 malam
         }
 
         $totalHarga  = $kamar->harga * $request->jumlah_kamar * $durasi;
@@ -235,33 +236,42 @@ class FrontController extends Controller
             $buktiBayarPath = $request->file('bukti_bayar')->store('bukti_bayar', 'public');
         }
 
-        // 5. Simpan Data Reservasi ke Database
+        // 5. Gabungkan Tanggal dan Jam menjadi Datetime utuh
+        $checkInDateTime = Carbon::parse($request->check_in . ' ' . $request->jam_check_in)->format('Y-m-d H:i:s');
+        $checkOutDateTime = Carbon::parse($request->check_out . ' ' . $request->jam_check_out)->format('Y-m-d H:i:s');
+
+        // 6. Simpan Data Reservasi ke Database
         Reservasi::create([
             'kode_booking'      => $kodeBooking,
             'kamar_id'          => $request->kamar_id,
             'nama_pemesan'      => $request->nama_pemesan,
             'email'             => $request->email,
             'no_hp'             => $request->no_hp,
-            'check_in'          => $request->check_in,
-            'check_out'         => $request->check_out,
+            'check_in'          => $checkInDateTime,
+            'jam_check_in'      => $request->jam_check_in,
+            'check_out'         => $checkOutDateTime,
+            'jam_check_out'     => $request->jam_check_out,
             'jumlah_kamar'      => $request->jumlah_kamar,
             'total_harga'       => $totalHarga,
             'status'            => 'pending',
             'catatan'           => $request->catatan,
             'bukti_pembayaran'  => $buktiBayarPath,
-            'metode_pembayaran' => $request->metode_pembayaran, // <-- Disimpan ke Database
+            'metode_pembayaran' => $request->metode_pembayaran,
         ]);
 
-        // 6. Format & Redirect ke WhatsApp Admin
+        // 7. Format & Redirect ke WhatsApp Admin
         $nomorWAAdmin = '6282186993746';
         $metodeText   = strtoupper($request->metode_pembayaran);
+
+        $checkInFormatted  = Carbon::parse($checkInDateTime)->translatedFormat('d M Y (H:i \W\I\B)');
+        $checkOutFormatted = Carbon::parse($checkOutDateTime)->translatedFormat('d M Y (H:i \W\I\B)');
 
         $pesan = "Halo Admin Grand Horizon Hotel, saya telah melakukan booking online dan mengunggah bukti bayar:\n\n" .
             "*Kode Booking:* {$kodeBooking}\n" .
             "*Nama:* {$request->nama_pemesan}\n" .
             "*Kamar:* {$kamar->nama_kamar}\n" .
-            "*Check In:* {$request->check_in}\n" .
-            "*Check Out:* {$request->check_out}\n" .
+            "*Check In:* {$checkInFormatted}\n" .
+            "*Check Out:* {$checkOutFormatted}\n" .
             "*Jumlah Kamar:* {$request->jumlah_kamar} Unit\n" .
             "*Metode Bayar:* {$metodeText}\n" . 
             "*Total Harga:* Rp " . number_format($totalHarga, 0, ',', '.') . "\n\n" .

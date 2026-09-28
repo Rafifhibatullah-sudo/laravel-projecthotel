@@ -14,7 +14,7 @@
         
         <!-- Header Print & Kembali (Sembunyi saat dicetak) -->
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom no-print">
-            <a href="{{ route('reservasi.index') }}" class="btn btn-secondary"> Kembali ke Daftar Reservasi</a>
+            <a href="{{ route('reservasi.index') }}" class="btn btn-secondary">Kembali ke Daftar Reservasi</a>
             
             <button onclick="cetakPDF()" class="btn btn-primary">
                  Cetak / Download PDF
@@ -33,7 +33,7 @@
                 <div class="badge bg-outline-dark border border-dark text-dark font-monospace fs-6 px-3 py-2 mt-1">
                     {{ $reservasi->kode_booking }}
                 </div>
-                <p class="text-muted small mt-2">Tgl Transaksi: {{ $reservasi->created_at->format('d M Y H:i') }}</p>
+                <p class="text-muted small mt-2">Tgl Transaksi: {{ \Carbon\Carbon::parse($reservasi->created_at)->format('d M Y H:i') }} WIB</p>
             </div>
         </div>
 
@@ -63,11 +63,23 @@
                 <table class="table table-borderless table-sm small">
                     <tr>
                         <td width="45%" class="text-muted">Check-In</td>
-                        <td>: <strong>{{ \Carbon\Carbon::parse($reservasi->check_in)->format('d M Y') }}</strong></td>
+                        <td>: <strong>{{ \Carbon\Carbon::parse($reservasi->check_in)->format('d M Y, H:i') }} WIB</strong></td>
                     </tr>
                     <tr>
                         <td class="text-muted">Check-Out</td>
-                        <td>: <strong>{{ \Carbon\Carbon::parse($reservasi->check_out)->format('d M Y') }}</strong></td>
+                        <td>: 
+                            @php
+                                // Mengecek apakah ada data checkout real (sesuaikan nama field dengan DB Anda, misalnya: checkout_real, real_checkout, atau tgl_checkout_real)
+                                $checkoutReal = $reservasi->checkout_real ?? $reservasi->real_checkout ?? null;
+                            @endphp
+
+                            @if($checkoutReal)
+                                <strong class="text-success">{{ \Carbon\Carbon::parse($checkoutReal)->format('d M Y, H:i') }} WIB</strong> 
+                                <span class="badge bg-success small ms-1">Real Check-Out</span>
+                            @else
+                                <strong>{{ \Carbon\Carbon::parse($reservasi->check_out)->format('d M Y, H:i') }} WIB</strong>
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td class="text-muted">Metode Pembayaran</td>
@@ -75,7 +87,7 @@
                     </tr>
                     <tr>
                         <td class="text-muted">Status Reservasi</td>
-                        <td>: <span class="fw-bold text-uppercase">CONFIRMED</span></td>
+                        <td>: <span class="fw-bold text-uppercase">{{ $reservasi->status ?? 'CONFIRMED' }}</span></td>
                     </tr>
                 </table>
             </div>

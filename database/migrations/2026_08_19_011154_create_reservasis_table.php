@@ -15,13 +15,15 @@ return new class extends Migration
             $table->string('nama_pemesan');
             $table->string('email');
             $table->string('no_hp');
-            $table->date('check_in');
-            $table->date('check_out');
+            $table->dateTime('check_in'); // Diubah ke dateTime agar menyimpan tanggal & jam
+            $table->time('jam_check_in'); // Jam check-in murni dari form pemesan
+            $table->dateTime('check_out'); // Diubah ke dateTime agar menyimpan tanggal & jam
+            $table->time('jam_check_out'); // Jam check-out murni dari form pemesan
+            $table->dateTime('checkout_real')->nullable(); // Jam checkout aktual
             $table->integer('jumlah_kamar')->default(1);
             $table->bigInteger('total_harga');
-            // Menambahkan status 'in' dan 'out'
             $table->enum('status', ['pending', 'confirmed', 'in', 'out', 'cancelled'])->default('pending');
-            $table->string('bukti_pembayaran')->nullable(); // Menampung file bukti transfer/bayar
+            $table->string('bukti_pembayaran')->nullable();
             $table->string('metode_pembayaran')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();

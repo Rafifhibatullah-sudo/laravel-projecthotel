@@ -14,55 +14,97 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $today = Carbon::today()->toDateString(); // Tanggal hari ini (YYYY-MM-DD)
+        $today = Carbon::today('Asia/Jakarta');
+        $todayString = $today->toDateString(); // YYYY-MM-DD
         $validStatus = ['confirmed', 'Confirmed', 'in', 'In', 'Check In', 'out', 'Out', 'Check Out', 'paid', 'Paid'];
 
-        // 1. Data statistik utama
+        // =========================================================================
+        // 1. OTOMATISASI STATUS BERDASARKAN WAKTU & TANGGAL
+        // =========================================================================
+
+        // A. Otomatis Check-In jika tanggal check_in sudah masuk/lewat dan status masih confirmed/paid
+        Reservasi::whereIn('status', ['confirmed', 'Confirmed', 'paid', 'Paid'])
+            ->whereDate('check_in', '<=', $todayString)
+            ->update([
+                'status' => 'in'
+            ]);
+
+        // B. Otomatis Check-Out jika tanggal check_out rencana sudah masuk/lewat
+        $reservasiHarusOut = Reservasi::whereIn('status', ['in', 'In', 'Check In'])
+            ->whereDate('check_out', '<=', $todayString)
+            ->get();
+
+        foreach ($reservasiHarusOut as $res) {
+            $res->update([
+                'status' => 'out',
+                'checkout_real' => Carbon::now('Asia/Jakarta') // Catat jam checkout aktual
+            ]);
+        }
+
+        // =========================================================================
+        // 2. DATA STATISTIK UTAMA & STATUS RESERVASI
+        // =========================================================================
         $totalKamar     = Kamar::count();
         $totalFasilitas = Fasilitas::count();
         $totalArtikel   = Artikel::count();
         $totalReservasi = Reservasi::count();
 
-        // 2. Kalkulasi Pendapatan
+        $pendingReservasi   = Reservasi::whereIn('status', ['pending', 'Pending'])->count();
+        $confirmedReservasi = Reservasi::whereIn('status', $validStatus)->count();
+        $cancelledReservasi = Reservasi::whereIn('status', ['cancelled', 'canceled', 'Dibatalkan', 'Batal'])->count();
+
+        // =========================================================================
+        // 3. LOGIKA BADGE CHECK-IN & CHECK-OUT HARI INI (PERSISTEN)
+        // =========================================================================
+
+        // Check-In Hari Ini:
+        // Menghitung SEMUA tamu yang tanggal masuknya (check_in) HARI INI.
+        // Meskipun tamu tersebut checkout mendadak malamnya, historis check-in hari ini TETAP TERHITUNG (+1).
+        $checkInHariIni = Reservasi::whereDate('check_in', $todayString)
+            ->whereIn('status', ['in', 'In', 'Check In', 'out', 'Out', 'Check Out'])
+            ->count();
+
+        // Check-Out Hari Ini:
+        // Menghitung tamu yang berstatus 'out' DAN terjadi checkout hari ini
+        // (Berdasarkan: checkout_real hari ini OR check_out rencana hari ini OR updated_at hari ini).
+        $checkOutHariIni = Reservasi::whereIn('status', ['out', 'Out', 'Check Out'])
+            ->where(function($query) use ($todayString) {
+                $query->whereDate('checkout_real', $todayString)
+                      ->orWhereDate('check_out', $todayString)
+                      ->orWhereDate('updated_at', $todayString);
+            })
+            ->count();
+
+        // =========================================================================
+        // 4. KALKULASI PENDAPATAN
+        // =========================================================================
         $pendapatanHariIni = Reservasi::whereIn('status', $validStatus)
-            ->whereDate('check_in', Carbon::today())
+            ->whereDate('check_in', $todayString)
             ->sum('total_harga');
 
         $pendapatanBulanIni = Reservasi::whereIn('status', $validStatus)
-            ->whereMonth('check_in', Carbon::now()->month)
-            ->whereYear('check_in', Carbon::now()->year)
+            ->whereMonth('check_in', Carbon::now('Asia/Jakarta')->month)
+            ->whereYear('check_in', Carbon::now('Asia/Jakarta')->year)
             ->sum('total_harga');
 
         $totalPendapatan = Reservasi::whereIn('status', $validStatus)
             ->sum('total_harga');
 
-        // 3. Status Reservasi
-        $pendingReservasi   = Reservasi::whereIn('status', ['pending', 'Pending'])->count();
-        $confirmedReservasi = Reservasi::whereIn('status', $validStatus)->count();
-        $cancelledReservasi = Reservasi::whereIn('status', ['cancelled', 'canceled', 'Dibatalkan', 'Batal'])->count();
-
-        // 4. Total Tamu Sedang Menginap (In-House Guests)
-        $checkInHariIni = Reservasi::whereDate('check_in', '<=', $today)
-            ->whereDate('check_out', '>=', $today)
-            ->whereIn('status', ['in', 'In', 'Check In', 'confirmed', 'Confirmed'])
-            ->count();
-
-        // 5. Check-Out Hari Ini
-        $checkOutHariIni = Reservasi::whereDate('check_out', $today)
-            ->whereIn('status', ['in', 'In', 'out', 'Out', 'Check In', 'Check Out'])
-            ->count();
-
-        // 6. Tabel Reservasi Terbaru
+        // =========================================================================
+        // 5. TABEL RESERVASI TERBARU
+        // =========================================================================
         $reservasiTerbaru = Reservasi::with('kamar')
             ->latest()
             ->take(5)
             ->get();
 
-        // 7. Hitung Sisa Stok Kamar Real-time
-        $kamars = Kamar::all()->map(function ($kamar) use ($today) {
+        // =========================================================================
+        // 6. HITUNG SISA STOK KAMAR REAL-TIME
+        // =========================================================================
+        $kamars = Kamar::all()->map(function ($kamar) use ($todayString) {
             $kamarTerpakai = Reservasi::where('kamar_id', $kamar->id)
-                ->whereDate('check_in', '<=', $today)
-                ->whereDate('check_out', '>', $today)
+                ->whereDate('check_in', '<=', $todayString)
+                ->whereDate('check_out', '>', $todayString)
                 ->whereIn('status', ['confirmed', 'Confirmed', 'in', 'In', 'Check In'])
                 ->sum('jumlah_kamar');
 
